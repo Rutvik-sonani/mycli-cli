@@ -1,3 +1,55 @@
-.DS_Store
+# Public docs-only repo — never commit platform source or secrets
+
+# Dependencies
 node_modules/
+.pnpm-store/
+.yarn/
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*.key
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+*.keystore
+*.tgz
+
+# Build / cache
+dist/
+build/
+out/
+.turbo/
+.cache/
+coverage/
+.vercel/
+.netlify/
+*.tsbuildinfo
+
+# Logs / OS / IDE
 *.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Never mirror private monorepo here
+apps/
+packages/
+plugins/
+templates/
+scripts/
+req.md
+pnpm-lock.yaml
+pnpm-workspace.yaml
+turbo.json
