@@ -1,0 +1,23 @@
+title = "MyCLI public docs repo secret scanning"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Static docs site and CI secret references"
+
+paths = [
+  '''(?i)\.gitleaks\.toml$''',
+  '''(?i)\.github/workflows/''',
+  '''(?i)^docs/''',
+  '''(?i)\.html$''',
+  '''(?i)\.css$''',
+  '''(?i)\.xml$''',
+  '''(?i)README\.md$''',
+]
+
+regexes = [
+  '''\$\{\{\s*secrets\.[A-Z0-9_]+\s*\}\}''',
+  '''sk_test_\.\.\.''',
+  '''example\.com''',
+]
