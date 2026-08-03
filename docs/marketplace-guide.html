@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Marketplace · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Marketplace</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html" class="active">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Plugin Marketplace Guide (Phase 7)</h1>
+<p>MyCLI includes a plugin marketplace for discovering, installing, and publishing extensions.</p>
+<h2>Quick start</h2>
+<pre><code class="language-bash">my plugin search docker          # Search local registry
+my plugin search mycli --registry npm   # Search npm registry
+my plugin search billing --registry remote  # Search MYCLI_REGISTRY_URL catalog
+my plugin search auth --registry all        # Local + remote + npm
+my plugin install @mycli-cli/docker  # Install from marketplace
+my plugin install @mycli-cli/docker --from npm --dry-run  # Plan npm install
+my plugin create @mycli-cli/plugin-billing  # Scaffold with Plugin SDK
+my plugin list                     # List loaded plugins
+my plugin update @mycli-cli/docker     # Reinstall latest
+my plugin remove @mycli-cli/docker     # Uninstall
+my plugin publish ./my-plugin    # Publish to community registry
+my plugin publish ./my-plugin --npm  # Include npm publish plan</code></pre>
+<h2>Registry</h2>
+<p>The local catalog lives at <strong><code>plugins/plugins.json</code></strong> at the monorepo root (or bundled with the CLI in <code>apps/cli/dist/</code>).</p>
+<pre><code>plugins/
+  plugins.json       ← RegistryManager catalogPath (default: join(repoRoot, 'plugins', 'plugins.json'))
+  official/&lt;slug&gt;/   ← source for @mycli-cli/* plugins
+  community/&lt;slug&gt;/  ← my plugin publish destination</code></pre>
+<p>Each entry includes:</p>
+<p>| Field | Purpose | |-------|---------| | <code>name</code> | Plugin identifier (<code>@mycli-cli/docker</code>) | | <code>slug</code> | Directory name (<code>docker</code>) | | <code>npmPackage</code> | npm package name (<code>@mycli-cli/plugin-docker</code>) | | <code>version</code> | Semver | | <code>compatibility</code> | Minimum CLI version | | <code>downloads</code> | Popularity ranking |</p>
+<h2>Install flow</h2>
+<p>1. <code>registry-manager</code> resolves plugin from local catalog or npm 2. Validates CLI compatibility 3. Copies plugin to <code>plugins/installed/&lt;slug&gt;/</code> (local) or runs <code>npm install</code> (npm) 4. <code>plugin-system</code> loads and runs <code>install()</code> hook 5. Saves plugin entry (with path) to <code>.myclirc.json</code> 6. Increments download count in local catalog when applicable</p>
+<h2>npm marketplace (Phase 14)</h2>
+<ul>
+<li><code>my plugin search &lt;query&gt; --registry npm|all</code> queries registry.npmjs.org for <code>@mycli-cli/*</code> packages</li>
+<li><code>my plugin install &lt;name&gt; --from npm</code> installs via npm into <code>plugins/installed/&lt;slug&gt;/</code></li>
+<li><code>my plugin publish &lt;dir&gt; --npm</code> prints npm publish commands alongside catalog update</li>
+</ul>
+<h2>Remote catalog (hosted registry URL)</h2>
+<p>Set <code>MYCLI_REGISTRY_URL</code> to a JSON catalog endpoint that returns:</p>
+<pre><code class="language-json">{ &quot;version&quot;: &quot;1.0.0&quot;, &quot;plugins&quot;: [ { &quot;name&quot;: &quot;@mycli-cli/example&quot;, &quot;version&quot;: &quot;1.0.0&quot;, &quot;slug&quot;: &quot;example&quot; } ] }</code></pre>
+<p>Then:</p>
+<pre><code class="language-bash">export MYCLI_REGISTRY_URL=https://registry.example.com/plugins.json
+my plugin search example --registry remote
+my plugin search auth --registry all</code></pre>
+<p>This closes the “hosted marketplace” gap without requiring MyCLI to operate the registry service itself.</p>
+<h2>Official plugins</h2>
+<p>All plugins in <code>plugins/official/</code> include <code>plugin.json</code> manifests:</p>
+<p><code>auth</code>, <code>rbac</code>, <code>docker</code>, <code>prisma</code>, <code>postgres</code>, <code>mysql</code>, <code>mongodb</code>, <code>mariadb</code>, <code>sqlite</code>, <code>redis</code>, <code>sqlserver</code>, <code>cockroachdb</code>, <code>swagger</code>, <code>kubernetes</code>, <code>aws</code>, <code>github</code>, <code>railway</code>, <code>fly</code>, <code>ai</code></p>
+<h2>Publish flow</h2>
+<pre><code class="language-bash">my plugin publish ./packages/my-plugin --dry-run
+my plugin publish ./packages/my-plugin</code></pre>
+<p>1. Validates <code>plugin.json</code> in the plugin directory 2. Copies to <code>plugins/community/&lt;slug&gt;/</code> 3. Updates <code>plugins/plugins.json</code> catalog</p>
+<h2>Managers</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/registry-manager</code> | Catalog load, search, get, publish, path resolution | | <code>@mycli-cli/marketplace-manager</code> | Install, update, uninstall, publish orchestration | | <code>@mycli-cli/plugin-system</code> | Plugin lifecycle, load, hooks, commands |</p>
+<h2>Authoring plugins</h2>
+<p>See <a href="./PLUGIN_GUIDE.md">PLUGIN_GUIDE.md</a> for plugin structure and <code>definePlugin()</code> API.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./plugin-guide.html">← Plugin guide</a>
+  <a class="doc-next" href="./generator-guide.html">Generators →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

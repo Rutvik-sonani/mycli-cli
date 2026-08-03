@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Audit · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Audit</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Audit</h1>
+<p>Enterprise audit logging with pluggable storage and HTTP middleware registration.</p>
+<pre><code class="language-bash">my add audit
+my add audit --storage file
+my organization setup</code></pre>
+<h2>What gets scaffolded</h2>
+<p>| Artifact | Path | |----------|------| | Service | <code>src/audit/audit.service.ts</code> | | Repository | <code>src/audit/audit.repository.ts</code> | | Middleware | <code>src/audit/audit.middleware.ts</code> | | Storage | <code>src/audit/storage/</code> (memory or file) | | Register | <code>src/audit/register-audit.ts</code> | | Docs | <code>AUDIT.md</code> |</p>
+<h2>Storage backends</h2>
+<p>| Backend | Use case | |---------|----------| | <code>memory</code> | Development and tests (default) | | <code>file</code> | Local JSON audit trail persistence |</p>
+<h2>HTTP integration</h2>
+<p><code>my add audit</code> registers <code>registerAuditMiddleware</code> in <code>src/routes/features.ts</code> so Fastify apps can attach request/response audit hooks automatically.</p>
+<h2>Related checks</h2>
+<ul>
+<li><code>my governance check</code> — verifies audit module presence</li>
+<li><code>my compliance check</code> — passes HIPAA/SOC 2 audit-log checks when <code>src/audit</code> or <code>AUDIT.md</code> exists</li>
+</ul></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./privacy.html">← Privacy</a>
+  <a class="doc-next" href="./enterprise-platform.html">Enterprise platform →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

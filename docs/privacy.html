@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Privacy · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Privacy</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Privacy</h1>
+<p>GDPR-style subject access export and erasure with consent, cookie, and processing record tracking.</p>
+<pre><code class="language-bash">my add privacy
+my privacy export --user user-1
+my privacy export --user user-1 --output ./exports
+my privacy export --user user-1 --dry-run
+my privacy delete --user user-1
+my privacy delete --user user-1 --dry-run</code></pre>
+<h2>What gets scaffolded</h2>
+<p>| Module | Path | |--------|------| | Privacy service | <code>src/privacy/privacy.service.ts</code> | | Consent | <code>src/privacy/consent/</code> | | Cookies | <code>src/privacy/cookies/</code> | | Processing registry | <code>src/privacy/processing/</code> | | Export / deletion | <code>src/privacy/export/</code>, <code>src/privacy/deletion/</code> | | Register | <code>src/privacy/register-privacy.ts</code> | | Docs | <code>PRIVACY.md</code> |</p>
+<h2>CLI behavior</h2>
+<p>When the privacy feature is enabled and <code>src/privacy/register-privacy.ts</code> (or compiled <code>.js</code>) exists, the CLI prefers the generated module's <code>privacyService</code>, <code>dataExporter</code>, and <code>dataDeleter</code>. Otherwise it falls back to the built-in in-memory store seeded from <code>data/privacy-users.json</code>.</p>
+<p>Exports include profile data plus consents, cookies, and processing records when those APIs are available on the service.</p>
+<h2>Related commands</h2>
+<ul>
+<li><code>my compliance check</code> — verifies privacy policy and subject-rights checks</li>
+<li><code>my add audit</code> — audit trail for data access events</li>
+</ul></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./compliance.html">← Compliance</a>
+  <a class="doc-next" href="./audit.html">Audit →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

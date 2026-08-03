@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Contributing · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Contributing</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Contributing</h1>
+<p>Thank you for contributing to MyCLI. Please read this guide before opening a pull request.</p>
+<h2>Community standards</h2>
+<ul>
+<li><a href="./CODE_OF_CONDUCT.md">Code of Conduct</a> — expected behavior in issues, PRs, and discussions</li>
+<li><a href="./SECURITY.md">Security Policy</a> — how to report vulnerabilities privately</li>
+</ul>
+<h2>Setup</h2>
+<pre><code class="language-bash">pnpm install
+pnpm build
+pnpm test</code></pre>
+<h2>Workflow</h2>
+<p>1. Create a feature branch from <code>main</code> 2. Make focused changes in the relevant package under <code>packages/</code> or <code>apps/cli/</code> 3. Add or adjust Vitest coverage for changed behavior 4. Run <code>pnpm lint</code>, <code>pnpm build</code>, and <code>pnpm test</code> 5. Open a PR using the <a href="./.github/pull_request_template.md">pull request template</a></p>
+<h2>Commit convention</h2>
+<p>Prefer <a href="https://www.conventionalcommits.org/">Conventional Commits</a>:</p>
+<pre><code>feat(generator-engine): add migration generator
+fix(cli): handle non-interactive create --yes
+docs(platform-manager): document tenancy modes</code></pre>
+<p>Husky enforces Conventional Commits on <code>commit-msg</code> when hooks are installed.</p>
+<h2>Packages</h2>
+<p>Keep packages independent. Public APIs belong in each package's <code>src/index.ts</code>. Avoid circular dependencies.</p>
+<p>Every package under <code>packages/</code> should have a <code>README.md</code> describing CLI commands, outputs, and how to run tests.</p>
+<h2>Templates</h2>
+<p>Never generate files with string concatenation in generators. Add an <code>.ejs</code> template under <code>apps/cli/templates/</code> (or a plugin template directory) and render via <code>@mycli-cli/template-engine</code>.</p>
+<h2>Plugins</h2>
+<p>See <a href="./PLUGIN_GUIDE.md">PLUGIN_GUIDE.md</a> and <a href="./MARKETPLACE_GUIDE.md">MARKETPLACE_GUIDE.md</a> for plugin authoring and the local catalog at <code>plugins/plugins.json</code>.</p>
+<h2>Architecture</h2>
+<p>See <a href="./ARCHITECTURE.md">ARCHITECTURE.md</a> for monorepo layout (<code>apps/cli</code> vs <code>packages/*</code>).</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./observability.html">← Observability</a>
+  <a class="doc-next" href="./publishing.html">Publishing →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

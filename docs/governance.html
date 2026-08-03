@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Governance · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Governance</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Governance</h1>
+<p>Company governance policies and automated compliance checks for engineering standards.</p>
+<pre><code class="language-bash">my governance setup
+my governance setup --company Acme
+my governance check
+my governance check --dry-run
+my governance check --output GOVERNANCE_REPORT.md</code></pre>
+<h2>What gets scaffolded</h2>
+<p>| Artifact | Path | |----------|------| | Policy | <code>src/governance/policy/company-policy.ts</code> | | Rules | <code>src/governance/rules/default-rules.ts</code> | | Checker | <code>src/governance/checker/governance.checker.ts</code> | | Service | <code>src/governance/governance.service.ts</code> | | Docs | <code>GOVERNANCE.md</code>, <code>company-policy.json</code> |</p>
+<h2>Checks</h2>
+<p><code>my governance check</code> inspects your project snapshot (database, features, Docker, tests, security, audit, CI) and writes <code>GOVERNANCE_REPORT.md</code>. Use <code>--dry-run</code> to preview without writing the report file.</p>
+<h2>Related commands</h2>
+<ul>
+<li><code>my add governance</code> — alias via <code>my add</code> when available</li>
+<li><code>my compliance check</code> — regulatory framework checks (GDPR, SOC 2, etc.)</li>
+</ul></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./ecommerce.html">← Ecommerce</a>
+  <a class="doc-next" href="./compliance.html">Compliance →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

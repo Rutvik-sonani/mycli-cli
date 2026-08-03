@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Infrastructure · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Infrastructure</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html" class="active">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Infrastructure Guide (Phase 4)</h1>
+<p>MyCLI generates production-ready container and cloud infrastructure from EJS templates.</p>
+<h2>Quick start</h2>
+<pre><code class="language-bash">my add docker                    # Dockerfile + Compose + docs
+my add docker --nginx            # Include nginx reverse proxy
+my add kubernetes                # K8s manifests in k8s/
+my add helm                      # Helm chart in helm/&lt;app&gt;/
+my add terraform --provider aws  # Terraform in deploy/terraform/aws/
+my deploy setup --provider railway
+my deploy terraform --provider gcp --region us-central1
+my doctor                        # Validates enabled infra features</code></pre>
+<h2>Docker (<code>my add docker</code>)</h2>
+<p>Generates:</p>
+<p>| File | Purpose | |------|---------| | <code>Dockerfile</code> | Multi-stage Node.js build | | <code>.dockerignore</code> | Build context exclusions | | <code>docker-compose.yml</code> | Dev stack (app, postgres, redis, mailhog) | | <code>docker-compose.prod.yml</code> | Production compose profile | | <code>docker-compose.test.yml</code> | CI / integration test compose | | <code>DOCKER.md</code> | Usage documentation | | <code>docker/nginx/default.conf</code> | Nginx proxy (with <code>--nginx</code>) |</p>
+<p>Database services in Compose match your project's configured database from <code>.myclirc.json</code>.</p>
+<h2>Kubernetes (<code>my add kubernetes</code>)</h2>
+<p>Generates manifests under <code>k8s/</code>:</p>
+<ul>
+<li><code>namespace.yaml</code> — dedicated namespace</li>
+<li><code>deployment.yaml</code> — app deployment with health probes</li>
+<li><code>service.yaml</code> — ClusterIP service</li>
+<li><code>ingress.yaml</code> — ingress with optional TLS</li>
+<li><code>configmap.yaml</code> — environment configuration</li>
+<li><code>hpa.yaml</code> — horizontal pod autoscaler</li>
+<li><code>K8S.md</code> — apply/upgrade instructions</li>
+</ul>
+<p>Options: <code>--replicas</code>, <code>--host</code></p>
+<h2>Helm (<code>my add helm</code>)</h2>
+<p>Generates a chart at <code>helm/&lt;appName&gt;/</code>:</p>
+<ul>
+<li><code>Chart.yaml</code>, <code>values.yaml</code></li>
+<li><code>templates/deployment.yaml</code>, <code>service.yaml</code>, <code>ingress.yaml</code>, <code>_helpers.tpl</code></li>
+<li><code>HELM.md</code> — install/upgrade commands</li>
+</ul>
+<h2>Terraform</h2>
+<h3>Via <code>my add terraform</code> or <code>my deploy terraform</code></h3>
+<p>| Provider | Target | Output path | |----------|--------|-------------| | <code>aws</code> | ECS Fargate | <code>deploy/terraform/aws/</code> | | <code>gcp</code> | Cloud Run | <code>deploy/terraform/gcp/</code> | | <code>azure</code> | Container Apps | <code>deploy/terraform/azure/</code> |</p>
+<p>Each provider includes <code>main.tf</code>, <code>variables.tf</code>, and <code>TERRAFORM.md</code>. AWS also includes <code>network.tf</code>, <code>database.tf</code>, <code>storage.tf</code>, and <code>outputs.tf</code>.</p>
+<p><code>my deploy setup</code> and <code>my deploy terraform</code> also generate a unified <code>DEPLOYMENT.md</code> at the project root.</p>
+<h2>PaaS deployment (<code>my deploy setup</code>)</h2>
+<p>| Provider | Output | |----------|--------| | <code>railway</code> | <code>railway.json</code> | | <code>render</code> | <code>render.yaml</code> | | <code>fly</code> | <code>fly.toml</code> | | <code>vercel</code> | <code>vercel.json</code> | | <code>netlify</code> | <code>netlify.toml</code> | | <code>custom</code> | <code>deploy/&lt;provider&gt;/README.md</code> |</p>
+<p>Cloud providers (<code>aws</code>, <code>gcp</code>, <code>azure</code>) route through Terraform generation.</p>
+<h2>Official plugins</h2>
+<ul>
+<li><code>@mycli-cli/docker</code> — Docker scaffolding via plugin install</li>
+<li><code>@mycli-cli/kubernetes</code> — K8s + Helm via plugin install</li>
+<li><code>@mycli-cli/aws</code> — AWS Terraform via plugin install</li>
+<li><code>@mycli-cli/azure</code> — Azure Terraform via plugin install</li>
+<li><code>@mycli-cli/gcp</code> — GCP Terraform via plugin install</li>
+</ul>
+<h2>Managers</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/docker-manager</code> | Dockerfile, Compose, nginx | | <code>@mycli-cli/kubernetes-manager</code> | K8s manifests, Helm charts | | <code>@mycli-cli/deployment-manager</code> | Terraform (AWS/GCP/Azure), PaaS configs |</p>
+<p>All managers use EJS templates from <code>apps/cli/templates/features/</code>.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./templates.html">← Templates</a>
+  <a class="doc-next" href="./cloud-deploy-guide.html">Cloud deploy →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

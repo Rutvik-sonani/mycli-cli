@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Cloud deploy · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Cloud deploy</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html" class="active">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Cloud Deployment Guide (Phase 6)</h1>
+<p>Phase 6 adds <strong>runtime cloud operations</strong> on top of Phase 4 static scaffolding.</p>
+<h2>Quick start</h2>
+<pre><code class="language-bash">my deploy setup --provider railway     # Config + DEPLOY.md + secrets doc
+my deploy push --provider railway      # Deploy to cloud (uses provider CLI)
+my deploy status --provider railway    # Check deployment status
+my deploy logs --provider fly          # Tail recent logs
+my deploy secrets sync --provider fly --dry-run
+my deploy rollback --provider fly --dry-run
+my deploy destroy --provider aws --dry-run
+my doctor                              # Validates deploy config</code></pre>
+<h2>SDK deploy (AWS / Azure / GCP)</h2>
+<p>Prefer provider SDKs instead of Terraform/CLI when targets are configured:</p>
+<pre><code class="language-bash"># Opt-in via flag (skips missing local scaffold files)
+my deploy push --provider aws --sdk --dry-run
+my deploy push --provider aws --sdk --image 123.dkr.ecr.us-east-1.amazonaws.com/api:1
+
+# Or set MYCLI_CLOUD_SDK=1 / target env vars
+export MYCLI_AWS_ECS_CLUSTER=prod
+export MYCLI_AWS_ECS_SERVICE=api
+# optional: MYCLI_AWS_ECS_CONTAINER=api
+export MYCLI_AZURE_RESOURCE_GROUP=rg
+export MYCLI_AZURE_WEBAPP=app
+export MYCLI_GCP_CLOUD_RUN_SERVICE=web
+export MYCLI_GCP_PROJECT=my-proj</code></pre>
+<p>| Provider | Live SDK action | |----------|-----------------| | AWS ECS | Register task definition (when <code>--image</code>) + <code>UpdateService</code> force redeploy | | AWS Lambda | <code>UpdateFunctionCode</code> (image URI or S3) | | Azure | Web App restart via ARM | | GCP | Cloud Run service patch |</p>
+<p>Without SDK targets, push still falls back to Terraform/CLI adapters.</p>
+<h2>Setup vs Push</h2>
+<p>| Command | What it does | |---------|--------------| | <code>my deploy setup</code> | Generates provider config + <code>DEPLOY.md</code>, <code>.env.production.example</code>, secrets doc | | <code>my deploy terraform</code> | Generates Terraform + cloud docs | | <code>my deploy push</code> | Executes provider CLI/SDK to deploy (supports <code>--dry-run</code>, <code>--sdk</code>) | | <code>my deploy secrets sync</code> | Maps <code>.env</code> keys to provider secret commands |</p>
+<p>Phase 4 generates static files. Phase 6 executes deployment operations.</p>
+<h2>Supported providers</h2>
+<p>| Provider | Setup output | Push command | |----------|--------------|--------------| | <code>railway</code> | <code>railway.json</code> | <code>railway up --detach</code> | | <code>fly</code> | <code>fly.toml</code> | <code>fly deploy --app &lt;name&gt;</code> | | <code>render</code> | <code>render.yaml</code> | <code>render deploys create</code> | | <code>vercel</code> | <code>vercel.json</code> | <code>vercel deploy --prod</code> | | <code>netlify</code> | <code>netlify.toml</code> | <code>netlify deploy --prod</code> | | <code>aws</code> | Terraform ECS | <code>terraform apply</code> | | <code>gcp</code> | Terraform Cloud Run | <code>terraform apply</code> | | <code>azure</code> | Terraform Container Apps | <code>terraform apply</code> | | <code>digitalocean</code> | <code>deploy/digitalocean/app.yaml</code> | <code>doctl apps create</code> |</p>
+<h2>Secrets sync</h2>
+<pre><code class="language-bash"># Preview which secrets would be synced
+my deploy secrets sync --provider railway --dry-run
+
+# Sync from custom env file
+my deploy secrets sync --provider fly --env-file .env.staging</code></pre>
+<p>Skips <code>NODE_ENV</code> and <code>PORT</code> by default. Generates provider-specific CLI commands.</p>
+<h2>Git remote repository (Phase 10)</h2>
+<p><code>git-manager</code> executes provider CLIs when available (<code>gh repo create</code>, <code>glab repo create</code>, <code>az repos create</code>) or prints manual steps for Bitbucket. Use <code>my git publish --provider github --dry-run</code> or <code>my create my-app --yes --publish github</code> after scaffolding.</p>
+<p>See <a href="./GIT_CICD_GUIDE.md">GIT_CICD_GUIDE.md</a> for full <code>my git</code> command reference.</p>
+<h2>Official plugins</h2>
+<ul>
+<li><code>@mycli-cli/railway</code> — Railway setup via plugin install</li>
+<li><code>@mycli-cli/fly</code> — Fly.io setup via plugin install</li>
+<li><code>@mycli-cli/aws</code> — AWS Terraform setup</li>
+</ul>
+<h2>Managers</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/cloud-manager</code> | Runtime deploy, status, logs, rollback, destroy | | <code>@mycli-cli/secrets-manager</code> | Env parsing and secrets sync planning | | <code>@mycli-cli/deployment-manager</code> | Static config generation (Phase 4) + validateSetup |</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./infra-guide.html">← Infrastructure</a>
+  <a class="doc-next" href="./git-cicd-guide.html">Git & CI/CD →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

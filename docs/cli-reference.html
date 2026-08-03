@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>CLI reference · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>CLI reference</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html" class="active">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>CLI Command Reference</h1>
+<p>Complete reference for all MyCLI commands.</p>
+<h2>Project Lifecycle</h2>
+<p>| Command | Description | |---------|-------------| | <code>my create</code> | Interactive project creation wizard | | <code>my dev</code> | Start development server | | <code>my build</code> | Build the project | | <code>my test</code> | Run tests | | <code>my lint</code> | Run linter |</p>
+<h2>Generators</h2>
+<p>| Command | Description | |---------|-------------| | <code>my make module &lt;name&gt;</code> | Generate a full module (controller, service, repository, routes, tests) | | <code>my make crud &lt;name&gt;</code> | Generate complete CRUD with migration | | <code>my make controller &lt;name&gt;</code> | Generate a controller | | <code>my make service &lt;name&gt;</code> | Generate a service | | <code>my make repository &lt;name&gt;</code> | Generate a repository | | <code>my make dto &lt;name&gt;</code> | Generate a DTO | | <code>my make middleware &lt;name&gt;</code> | Generate middleware | | <code>my make validator &lt;name&gt;</code> | Generate a validator | | <code>my make resource &lt;name&gt;</code> | Generate a resource (controller + service + routes) | | <code>my make migration &lt;name&gt;</code> | Generate a database migration | | <code>my make model &lt;name&gt;</code> | Generate a model/entity | | <code>my make event &lt;name&gt;</code> | Generate an event handler | | <code>my make queue &lt;name&gt;</code> | Generate a queue worker | | <code>my make mail &lt;name&gt;</code> | Generate a mail template | | <code>my make domain &lt;name&gt;</code> | Generate DDD aggregate/entity/value-object |</p>
+<h2>Features (<code>my add</code>)</h2>
+<p>| Feature | Description | |---------|-------------| | <code>my add auth</code> | JWT, refresh-token, OAuth, magic-link, OTP, passkeys, MFA | | <code>my add rbac</code> | Role-based access control with dynamic policies | | <code>my add database</code> | Database + ORM setup | | <code>my add docker</code> | Dockerfile + docker-compose | | <code>my add kubernetes</code> | K8s manifests | | <code>my add helm</code> | Helm charts | | <code>my add terraform</code> | IaC for AWS/Azure/GCP/DigitalOcean | | <code>my add swagger</code> | OpenAPI docs (Swagger/Scalar/Redoc) | | <code>my add graphql</code> | GraphQL server | | <code>my add websocket</code> | WebSocket support | | <code>my add github</code> | GitHub Actions, labels, branch protection | | <code>my add cicd</code> | CI/CD pipelines (GitHub/GitLab/Bitbucket/Jenkins/Azure) | | <code>my add testing</code> | Vitest + Playwright/Cypress setup | | <code>my add cache</code> | Redis/Memcached/In-memory caching | | <code>my add queue</code> | BullMQ/RabbitMQ/Kafka/SQS | | <code>my add mail</code> | SMTP/SES/SendGrid/Mailgun/Resend | | <code>my add storage</code> | S3/GCS/Azure Blob/Cloudinary/Local | | <code>my add payment</code> | Stripe/PayPal/Razorpay/LemonSqueezy | | <code>my add ecommerce</code> | Full ecommerce preset | | <code>my add observability</code> | Logging + metrics + tracing (OpenTelemetry) | | <code>my add security</code> | Security scanner + secret detection | | <code>my add tenancy</code> | Multi-tenancy (shared-db, schema-per-tenant, db-per-tenant) | | <code>my add feature-flags</code> | Feature flags (database/memory/LaunchDarkly) | | <code>my add search</code> | Search (MeiliSearch/Typesense/Elasticsearch/Algolia) | | <code>my add cqrs</code> | CQRS command/query bus | | <code>my add event-system</code> | Event-driven architecture | | <code>my add audit</code> | Audit logging | | <code>my add compliance</code> | GDPR/HIPAA/SOC2/ISO27001 frameworks | | <code>my add privacy</code> | Data export, deletion, consent management | | <code>my add backup</code> | Database backup/restore | | <code>my add enterprise-auth</code> | Enterprise SSO (SAML/LDAP/AD/Keycloak/Azure AD/Google) | | <code>my add ai</code> | AI integration (OpenAI/Anthropic/Ollama) | | <code>my add frontend</code> | Frontend app (React/Next/Vue/Svelte/Nuxt/Angular) | | <code>my add ui</code> | UI library (Tailwind/MUI/shadcn/Ant/Chakra/Mantine) | | <code>my add ide</code> | VS Code + Cursor config | | <code>my add release</code> | Semantic Release (semver/calver) | | <code>my add quality</code> | Biome/ESLint + Prettier + Husky | | <code>my add env</code> | Environment file management | | <code>my add dependencies</code> | Dependabot/Renovate |</p>
+<h2>Deployment</h2>
+<p>| Command | Description | |---------|-------------| | <code>my deploy setup</code> | Configure deployment provider | | <code>my deploy push</code> | Deploy to cloud | | <code>my deploy status</code> | Check deployment status | | <code>my deploy logs</code> | View deployment logs | | <code>my deploy rollback</code> | Rollback to previous version | | <code>my deploy destroy</code> | Tear down infrastructure | | <code>my deploy secrets sync</code> | Sync secrets to cloud provider | | <code>my deploy terraform plan</code> | Terraform plan | | <code>my deploy terraform apply</code> | Terraform apply |</p>
+<h2>Enterprise</h2>
+<p>| Command | Description | |---------|-------------| | <code>my identity</code> | Enterprise identity management | | <code>my tenancy</code> | Tenant provisioning and management | | <code>my audit</code> | Audit log inspection | | <code>my compliance</code> | Compliance framework checks | | <code>my privacy</code> | GDPR data export/deletion | | <code>my governance</code> | Policy governance | | <code>my organization</code> | Organization management | | <code>my security scan</code> | Security scanning | | <code>my backup</code> | Database backup/restore |</p>
+<h2>Utilities</h2>
+<p>| Command | Description | |---------|-------------| | <code>my doctor</code> | Health check and diagnostics | | <code>my upgrade</code> | Upgrade project dependencies and config | | <code>my analytics</code> | Project analytics and health score | | <code>my plugin</code> | Plugin management (list, add, remove, search) | | <code>my template</code> | Template marketplace (search, install, publish) | | <code>my telemetry</code> | Telemetry opt-in/out | | <code>my locale</code> | Set CLI language (en/es/fr/hi) | | <code>my git</code> | Git provider integration | | <code>my commit</code> | Conventional commit helper | | <code>my release</code> | Release management | | <code>my role</code> | RBAC role management | | <code>my permission</code> | Permission management | | <code>my ai</code> | AI-powered code generation | | <code>my search</code> | Full-text search operations |</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./platform-guide.html">← Platform</a>
+  <a class="doc-next" href="./deployment.html">Deployment →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

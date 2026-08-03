@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Home · MyCLI</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="./index.html">MyCLI</a></p>
+    <h1>Laravel Artisan for Node.js</h1>
+    <nav class="site-nav"><a href="../index.html" class="active">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><section class="lead">
+<p>Laravel Artisan for Node.js</p>
+<p>Generate production-ready applications, infrastructure, and workflows with a single CLI.</p>
+</section>
+<pre><code>npm i -g @mycli-cli/cli
+my create my-app --yes
+my create ecommerce --yes
+my add ecommerce
+my make module user
+my add auth
+my commit -m "feat: add auth"
+my deploy secrets sync --provider vault --dry-run</code></pre>
+<section>
+<h2>Popular flows</h2>
+<ul class="card-list">
+<li><a href="./docs/ecommerce.html">Ecommerce preset</a> — create or <code>my add ecommerce</code></li>
+<li><a href="./docs/secrets.html">Secrets</a> — AWS SM / Vault / GCP + runtime loader</li>
+<li><a href="./docs/plugins.html">Plugins</a> — 30 official plugins + marketplace</li>
+<li><a href="./docs/features-guide.html">Features</a> — auth, RBAC, payments, search, observability</li>
+<li><a href="./docs/cloud-deploy-guide.html">Cloud deploy</a> — Railway, Fly, Vercel, AWS, …</li>
+</ul>
+</section>
+<section>
+<h2>Documentation</h2>
+<ul class="card-list">
+<li><a href="./docs/getting-started.html">Getting started</a> — install, create, daily commands</li>
+<li><a href="./docs/architecture.html">Architecture</a> — monorepo and package layout</li>
+<li><a href="./docs/plugin-guide.html">Plugin guide</a> — authoring and marketplace</li>
+<li><a href="./docs/generator-guide.html">Generators</a> — <code>my make</code> reference</li>
+<li><a href="./docs/publishing.html">Publishing</a> — npm release workflow</li>
+</ul>
+</section></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Database · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Database</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html" class="active">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Database Guide (Phase 9)</h1>
+<p>Phase 9 adds <strong>full ORM coverage</strong> and <strong>per-database plugins</strong> for all supported engines.</p>
+<h2>Supported databases</h2>
+<p>| Engine | Env key | ORMs | |--------|---------|------| | PostgreSQL | <code>DATABASE_URL</code> | Prisma, Drizzle, TypeORM, Sequelize, MikroORM | | MySQL / MariaDB | <code>DATABASE_URL</code> | Prisma, Drizzle, TypeORM, Sequelize, MikroORM | | SQLite | <code>DATABASE_URL</code> | Prisma, Drizzle, TypeORM, Sequelize, MikroORM | | MongoDB | <code>DATABASE_URL</code> | Prisma, Mongoose, MikroORM | | CockroachDB | <code>DATABASE_URL</code> | Prisma, Drizzle, TypeORM, Sequelize, MikroORM | | SQL Server | <code>DATABASE_URL</code> | Prisma, TypeORM, Sequelize, MikroORM | | Redis | <code>REDIS_URL</code> | (cache only — no ORM scaffold) |</p>
+<h2>Commands</h2>
+<pre><code class="language-bash"># During create
+my create my-app --database mysql --orm typeorm
+my create my-app --database mongodb --orm mongoose
+
+# Add to existing project
+my add database --database postgresql --orm drizzle
+my add database --database mongodb --orm mongoose
+
+# Marketplace plugins
+my plugin install @mycli-cli/mysql
+my plugin install @mycli-cli/mongodb
+my plugin install @mycli-cli/postgres
+my plugin install @mycli-cli/mariadb
+my plugin install @mycli-cli/sqlite
+my plugin install @mycli-cli/redis
+my plugin install @mycli-cli/sqlserver
+my plugin install @mycli-cli/cockroachdb</code></pre>
+<h2>Generated files by ORM</h2>
+<p>| ORM | Key outputs | |-----|-------------| | Prisma | <code>prisma/schema.prisma</code>, <code>prisma/seed.ts</code>, <code>src/database/prisma.client.ts</code> | | Drizzle | <code>src/database/schema.ts</code>, <code>drizzle.config.ts</code> | | TypeORM | <code>src/database/data-source.ts</code>, <code>src/database/entities/</code> | | Mongoose | <code>src/database/connection.ts</code>, <code>src/database/models/</code> | | Sequelize | <code>src/database/sequelize/config.ts</code>, <code>src/database/sequelize/models/</code> | | MikroORM | <code>src/database/mikro-orm.config.ts</code>, <code>src/database/entities/</code> |</p>
+<p>Official database plugins: <code>@mycli-cli/postgres</code>, <code>@mycli-cli/mysql</code>, <code>@mycli-cli/mongodb</code>, <code>@mycli-cli/mariadb</code>, <code>@mycli-cli/sqlite</code>, <code>@mycli-cli/redis</code>, <code>@mycli-cli/sqlserver</code>, <code>@mycli-cli/cockroachdb</code>.</p>
+<p>Each database plugin also writes <code>docs/database-&lt;engine&gt;.md</code> with local dev and production guidance.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./generator-guide.html">← Generators</a>
+  <a class="doc-next" href="./features-guide.html">Features →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

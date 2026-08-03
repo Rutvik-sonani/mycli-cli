@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Getting started · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Getting started</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html" class="active">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Getting started</h1>
+<h2>Prerequisites</h2>
+<ul>
+<li>Node.js <strong>22+</strong></li>
+<li>pnpm <strong>9+</strong> (recommended)</li>
+</ul>
+<h2>Install MyCLI</h2>
+<p>From the monorepo (development):</p>
+<pre><code class="language-bash">pnpm install
+pnpm build
+node apps/cli/dist/index.js --help</code></pre>
+<h2>Create a project</h2>
+<pre><code class="language-bash">my create my-app
+# or non-interactive defaults:
+my create my-app --yes --skip-install</code></pre>
+<p>The wizard configures application type, database, ORM, Docker, Git, CI/CD, and more.</p>
+<h2>Common workflows</h2>
+<pre><code class="language-bash">cd my-app
+my make module user --fields name:string,email:email
+my add auth
+my add ecommerce
+my add docker
+my commit -m &quot;feat: add shop modules&quot;
+my deploy setup --provider railway</code></pre>
+<h2>Locales</h2>
+<pre><code class="language-bash">MYCLI_LOCALE=hi my create</code></pre>
+<p>Supported locales: <code>en</code>, <code>hi</code>, <code>es</code>, <code>fr</code> (see <code>locales/</code>).</p>
+<h2>Next steps</h2>
+<ul>
+<li><a href="./plugins.md">Plugins</a> — extend MyCLI with official or community plugins</li>
+<li><a href="./templates.md">Templates</a> — understand the template engine</li>
+<li><a href="../examples/minimal-api/">Examples</a> — minimal API starter reference</li>
+</ul></article><nav class="doc-pager" aria-label="Document navigation">
+  <span></span>
+  <a class="doc-next" href="./architecture.html">Architecture →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

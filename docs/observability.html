@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Observability · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Observability</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Observability Guide</h1>
+<p>MyCLI generates a full observability stack: structured logging, metrics, distributed tracing, error monitoring, and alerting.</p>
+<h2>Setup</h2>
+<pre><code class="language-bash">my add observability --logger pino
+my add observability --logger winston</code></pre>
+<h2>Components</h2>
+<h3>Logging</h3>
+<ul>
+<li>Structured JSON logging (Pino or Winston)</li>
+<li>Request/response correlation IDs</li>
+<li>Log levels and context propagation</li>
+</ul>
+<h3>Metrics</h3>
+<ul>
+<li>Prometheus-compatible metrics endpoint (<code>/metrics</code>)</li>
+<li>HTTP request duration, error rates, active connections</li>
+<li>Custom business metrics support</li>
+</ul>
+<h3>Tracing</h3>
+<ul>
+<li>OpenTelemetry SDK integration</li>
+<li>Automatic HTTP/DB instrumentation</li>
+<li>Trace context propagation</li>
+</ul>
+<h3>Error Monitoring</h3>
+<ul>
+<li>Sentry integration (optional)</li>
+<li>Datadog APM support (optional)</li>
+<li>Unhandled error capture with stack traces</li>
+</ul>
+<h3>Alerting</h3>
+<ul>
+<li>Configurable alert rules</li>
+<li>Health check endpoint (<code>/health</code>)</li>
+</ul>
+<h2>Generated Files</h2>
+<ul>
+<li><code>src/modules/observability/logging/</code> — Logger setup and middleware</li>
+<li><code>src/modules/observability/metrics/</code> — Prometheus registry and collectors</li>
+<li><code>src/modules/observability/tracing/</code> — OpenTelemetry SDK bootstrap</li>
+<li><code>src/modules/observability/errors/</code> — Error monitoring integration</li>
+<li><code>src/modules/observability/alerts/</code> — Alert rule definitions</li>
+<li><code>src/modules/observability/correlation.ts</code> — Request correlation ID middleware</li>
+</ul>
+<h2>Environment Variables</h2>
+<pre><code class="language-env">OTEL_SERVICE_NAME=my-app
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+SENTRY_DSN=
+DD_SITE=datadoghq.com
+LOG_LEVEL=info</code></pre></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./multi-tenancy.html">← Multi-tenancy</a>
+  <a class="doc-next" href="./contributing.html">Contributing →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

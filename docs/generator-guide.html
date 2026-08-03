@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Generators · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Generators</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html" class="active">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Generator Guide</h1>
+<h2>Overview</h2>
+<p>Generators are registered with <code>@mycli-cli/generator-engine</code> and render EJS templates.</p>
+<pre><code class="language-bash">my make module user
+my make crud product --fields name:string,price:number,description:text
+my make controller auth
+my make service payment
+my make repository product
+my make dto login
+my make middleware auth
+my make validator register
+my make resource product
+my make migration create_users</code></pre>
+<h2>Creating a generator</h2>
+<pre><code class="language-ts">import { createTemplateGenerator } from '@mycli-cli/generator-engine';
+
+export const moduleGenerator = createTemplateGenerator({
+  name: 'module',
+  templateDir: 'generators/module',
+  outputDir: (ctx, names) =&gt; `src/modules/${names.kebab}`,
+});</code></pre>
+<h2>Generators</h2>
+<pre><code class="language-bash">my make list
+my make module user --fields name:string,email:email
+my make crud product --fields name:string,price:number,description:text,category:relation:Category
+my make controller auth
+my make service payment
+my make repository product
+my make model order --fields total:number,status:string
+my make dto login --fields email:email,password:string
+my make middleware auth
+my make validator register --fields email:email,password:string
+my make resource product --fields name:string,price:number
+my make event order
+my make queue send-welcome
+my make mail order-confirmation
+my make migration create_users --fields email:string</code></pre>
+<p>Generators auto-register modules into:</p>
+<ul>
+<li><code>src/modules/index.ts</code> (barrel exports)</li>
+<li><code>src/routes/index.ts</code> (route factories)</li>
+<li><code>src/providers/index.ts</code> (DI providers)</li>
+<li><code>openapi.json</code> (when present)</li>
+</ul>
+<p>Use <code>--no-register</code> to skip auto-registration and <code>--dry-run</code> to preview.</p>
+<h2>Migrations</h2>
+<p><code>my make migration</code> reads the ORM from <code>.myclirc.json</code> and generates real migration artifacts:</p>
+<p>| ORM | Output | |-----|--------| | Prisma | <code>prisma/migrations/&lt;timestamp&gt;_create_&lt;table&gt;/migration.sql</code> + appends model to <code>schema.prisma</code> | | Drizzle | <code>drizzle/&lt;timestamp&gt;_create_&lt;table&gt;.sql</code> + appends table to <code>src/database/schema.ts</code> | | TypeORM | <code>src/database/migrations/&lt;timestamp&gt;-Create&lt;Entity&gt;.ts</code> | | Sequelize | <code>src/database/migrations/&lt;timestamp&gt;-create-&lt;entity&gt;.js</code> | | Mongoose | <code>src/database/migrations/&lt;timestamp&gt;-create-&lt;entity&gt;.ts</code> |</p>
+<p><code>my make crud</code> automatically emits migrations for the configured ORM.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./marketplace-guide.html">← Marketplace</a>
+  <a class="doc-next" href="./database-guide.html">Database →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

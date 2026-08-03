@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Ecommerce · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Ecommerce</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html" class="active">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Ecommerce preset</h1>
+<p>Create a shop-ready API with products, cart, orders, auth, RBAC, swagger, docker, and Stripe payment.</p>
+<pre><code class="language-bash">my create ecommerce --yes
+# or
+my create my-shop --preset ecommerce --yes
+# retrofit an existing project:
+my add ecommerce</code></pre>
+<h2>ORM support</h2>
+<p>| ORM | Behavior | |-----|----------| | <code>prisma</code> | Patches <code>prisma/schema.prisma</code> + Prisma repositories | | <code>drizzle</code> | Appends tables to <code>src/database/schema.ts</code> + Drizzle repositories | | <code>typeorm</code> | Writes <code>src/database/entities/ecommerce.entities.ts</code> + TypeORM repositories | | <code>mongoose</code> | Writes <code>src/database/models/ecommerce.models.ts</code> + Mongoose repositories | | <code>sequelize</code> | Writes Sequelize models + repositories | | <code>mikroorm</code> | Writes MikroORM entities + repositories | | <code>none</code> | In-memory repositories (swap by recreating with an ORM) |</p>
+<pre><code class="language-bash">my create shop --preset ecommerce --orm typeorm --database mysql --yes</code></pre>
+<h2>Generated modules</h2>
+<p>| Module | Path | |--------|------| | Products | <code>src/modules/products/</code> | | Cart | <code>src/modules/cart/</code> | | Orders | <code>src/modules/orders/</code> | | Register | <code>src/modules/ecommerce.register.ts</code> → wired into <code>src/routes/features.ts</code> | | Payment | <code>src/services/payment/</code> (Stripe by default) |</p>
+<h2>Routes</h2>
+<p>After create, <code>registerEcommerceRoutes(app)</code> is registered automatically alongside auth/payment.</p>
+<h2>Docs in the project</h2>
+<ul>
+<li><code>ECOMMERCE.md</code></li>
+<li><code>AUTH.md</code> / <code>PAYMENT.md</code></li>
+</ul></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./secrets.html">← Secrets</a>
+  <a class="doc-next" href="./governance.html">Governance →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

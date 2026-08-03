@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Plugins · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Plugins</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html" class="active">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Plugins</h1>
+<p>MyCLI ships <strong>30 official plugins</strong> plus community plugins via the marketplace.</p>
+<h2>Official plugins</h2>
+<p>| Category | Plugins | |----------|---------| | Auth &amp; API | <code>@mycli-cli/auth</code>, <code>@mycli-cli/rbac</code>, <code>@mycli-cli/swagger</code>, <code>@mycli-cli/stripe</code> | | Database | <code>@mycli-cli/postgres</code>, <code>@mycli-cli/mysql</code>, <code>@mycli-cli/mongodb</code>, <code>@mycli-cli/mariadb</code>, <code>@mycli-cli/sqlite</code>, <code>@mycli-cli/redis</code>, <code>@mycli-cli/sqlserver</code>, <code>@mycli-cli/cockroachdb</code>, <code>@mycli-cli/prisma</code> | | Infra | <code>@mycli-cli/docker</code>, <code>@mycli-cli/kubernetes</code>, <code>@mycli-cli/aws</code>, <code>@mycli-cli/azure</code>, <code>@mycli-cli/gcp</code> | | Cloud PaaS | <code>@mycli-cli/railway</code>, <code>@mycli-cli/fly</code>, <code>@mycli-cli/digitalocean</code>, <code>@mycli-cli/render</code>, <code>@mycli-cli/vercel</code>, <code>@mycli-cli/netlify</code> | | CI/CD &amp; Git | <code>@mycli-cli/github</code>, <code>@mycli-cli/gitlab</code>, <code>@mycli-cli/bitbucket</code>, <code>@mycli-cli/jenkins</code>, <code>@mycli-cli/azure-pipelines</code> | | AI | <code>@mycli-cli/ai</code> |</p>
+<h2>CLI commands</h2>
+<pre><code class="language-bash">my plugin search docker
+my plugin install @mycli-cli/docker
+my plugin install digitalocean
+my plugin install azure-pipelines
+my plugin list
+my plugin create @mycli-cli/plugin-billing
+my plugin publish ./plugins/community/my-plugin</code></pre>
+<h2>Community example</h2>
+<p>See <a href="../plugins/community/hello-mycli/"><code>plugins/community/hello-mycli</code></a> for a minimal community plugin built with <code>@mycli-cli/plugin-sdk</code>.</p>
+<h2>Authoring</h2>
+<p>1. <code>my plugin create @mycli-cli/plugin-&lt;name&gt;</code> 2. Implement <code>install()</code>, optional <code>commands()</code>, <code>hooks()</code>, <code>dependencies()</code> 3. Test locally with <code>my plugin install ./plugins/community/&lt;name&gt; --path</code> 4. Publish with <code>my plugin publish</code></p>
+<p>Full reference: <a href="../PLUGIN_GUIDE.md">PLUGIN_GUIDE.md</a> and <a href="../MARKETPLACE_GUIDE.md">MARKETPLACE_GUIDE.md</a>.</p>
+<h2>Testing</h2>
+<p>Official plugin install smoke tests run in <code>plugins/official-tests/</code> (all 30 slugs).</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./enterprise-platform.html">← Enterprise platform</a>
+  <a class="doc-next" href="./testing.html">Testing →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

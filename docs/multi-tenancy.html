@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Multi-tenancy · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Multi-tenancy</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Multi-Tenancy Guide</h1>
+<p>MyCLI supports enterprise multi-tenancy with multiple isolation strategies.</p>
+<h2>Strategies</h2>
+<p>| Strategy | Isolation | Use Case | |----------|-----------|----------| | <code>shared-db</code> | Row-level (tenant_id column) | SaaS with many tenants, cost-effective | | <code>schema-per-tenant</code> | Schema-level isolation | Medium isolation, Postgres/MySQL | | <code>db-per-tenant</code> | Separate database per tenant | Maximum isolation, compliance-heavy |</p>
+<h2>Setup</h2>
+<pre><code class="language-bash">my add tenancy --model multi-tenant-saas --mode shared-db
+my add tenancy --model multi-tenant-saas --mode schema-per-tenant
+my add tenancy --model multi-tenant-saas --mode db-per-tenant</code></pre>
+<h2>Database Support</h2>
+<p>Provision hooks support:</p>
+<ul>
+<li><strong>PostgreSQL</strong> — CREATE DATABASE / CREATE SCHEMA (full automation)</li>
+<li><strong>MySQL/MariaDB</strong> — CREATE DATABASE / CREATE DATABASE (schema = database)</li>
+<li><strong>MongoDB</strong> — Database per tenant via separate connections</li>
+<li><strong>SQLite</strong> — File-per-tenant approach</li>
+</ul>
+<h2>CLI Commands</h2>
+<pre><code class="language-bash">my tenancy provision &lt;slug&gt;     # Provision a new tenant
+my tenancy list                 # List all tenants
+my tenancy resolve &lt;slug&gt;       # Show tenant connection info
+my tenancy migrate &lt;slug&gt;       # Run migrations for a tenant
+my tenancy seed &lt;slug&gt;          # Seed tenant data</code></pre>
+<h2>Generated Files</h2>
+<ul>
+<li><code>src/modules/tenancy/tenant.middleware.ts</code> — Request-scoped tenant resolution</li>
+<li><code>src/modules/tenancy/tenant.context.ts</code> — AsyncLocalStorage tenant context</li>
+<li><code>src/modules/tenancy/tenant.resolver.ts</code> — Strategy-specific DB resolution</li>
+<li><code>src/modules/tenancy/tenant.guard.ts</code> — Tenant access guard</li>
+<li><code>src/modules/tenancy/tenant.routes.ts</code> — Tenant CRUD API</li>
+<li><code>src/modules/tenancy/repositories/</code> — File + Prisma tenant repositories</li>
+<li><code>src/modules/tenancy/database/</code> — Connection manager + provisioning (db-per-tenant)</li>
+<li><code>src/modules/tenancy/schema/</code> — Schema manager (schema-per-tenant)</li>
+</ul></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./authentication.html">← Authentication</a>
+  <a class="doc-next" href="./observability.html">Observability →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

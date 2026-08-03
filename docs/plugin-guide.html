@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Plugin guide · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Plugin guide</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html" class="active">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Plugin Guide</h1>
+<h2>Plugin layout</h2>
+<pre><code>plugin-stripe/
+  plugin.json
+  src/index.ts
+  commands/
+  templates/
+  hooks/
+  README.md</code></pre>
+<h2>plugin.json</h2>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;@mycli-cli/plugin-stripe&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;Stripe payments&quot;,
+  &quot;main&quot;: &quot;dist/index.js&quot;,
+  &quot;compatibility&quot;: &quot;&gt;=1.0.0&quot;
+}</code></pre>
+<h2>Implementing a plugin</h2>
+<pre><code class="language-ts">import { definePlugin } from '@mycli-cli/plugin-system';
+
+export default definePlugin({
+  name: '@mycli-cli/plugin-stripe',
+  version: '1.0.0',
+  async install(ctx) {
+    // generate files, update config
+  },
+  commands() {
+    return [
+      {
+        name: 'stripe',
+        description: 'Stripe helpers',
+        handler: async () =&gt; {},
+      },
+    ];
+  },
+  templates() {
+    return ['templates/stripe'];
+  },
+  dependencies() {
+    return { stripe: '^17.0.0' };
+  },
+});</code></pre>
+<h2>CLI</h2>
+<pre><code class="language-bash">my plugin search stripe
+my plugin install @mycli-cli/plugin-stripe
+my plugin list
+my plugin update @mycli-cli/docker
+my plugin remove @mycli-cli/plugin-stripe
+my plugin publish ./my-plugin --dry-run
+my plugin create @mycli-cli/plugin-billing
+my plugin search mycli --registry npm
+my plugin install @mycli-cli/docker --from npm
+my add ai
+my ai generate module user --dry-run</code></pre>
+<h2>Plugin catalog (<code>plugins/plugins.json</code>)</h2>
+<p>The <strong>local marketplace catalog</strong> is a JSON file at the repository root:</p>
+<pre><code>mycli/
+  plugins/
+    plugins.json          ← catalog (name, slug, version, compatibility, downloads)
+    official/             ← first-party plugins (@mycli-cli/*)
+    community/            ← published community plugins
+    installed/            ← per-project installs (generated projects)</code></pre>
+<p>| Context | Resolved path | |---------|---------------| | Monorepo development | <code>&lt;repoRoot&gt;/plugins/plugins.json</code> | | CLI runtime (bundled) | Resolved via <code>apps/cli</code> paths helper alongside copied templates |</p>
+<p><code>@mycli-cli/registry-manager</code> loads and searches this catalog. <code>@mycli-cli/marketplace-manager</code> orchestrates install/publish and updates the catalog on <code>my plugin publish</code>.</p>
+<p>See <a href="./MARKETPLACE_GUIDE.md">MARKETPLACE_GUIDE.md</a> for the full Phase 7 marketplace reference.</p>
+<h2>Official categories</h2>
+<p><code>@mycli-cli/auth</code>, <code>@mycli-cli/rbac</code>, <code>@mycli-cli/docker</code>, <code>@mycli-cli/prisma</code>, <code>@mycli-cli/postgres</code>, <code>@mycli-cli/mysql</code>, <code>@mycli-cli/mongodb</code>, <code>@mycli-cli/mariadb</code>, <code>@mycli-cli/sqlite</code>, <code>@mycli-cli/redis</code>, <code>@mycli-cli/sqlserver</code>, <code>@mycli-cli/cockroachdb</code>, <code>@mycli-cli/swagger</code>, <code>@mycli-cli/kubernetes</code>, <code>@mycli-cli/aws</code>, <code>@mycli-cli/azure</code>, <code>@mycli-cli/gcp</code>, <code>@mycli-cli/github</code>, <code>@mycli-cli/railway</code>, <code>@mycli-cli/fly</code>, <code>@mycli-cli/ai</code></p>
+<p>Community example: <code>@community/hello-mycli</code> in <code>plugins/community/hello-mycli/</code>.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./architecture.html">← Architecture</a>
+  <a class="doc-next" href="./marketplace-guide.html">Marketplace →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

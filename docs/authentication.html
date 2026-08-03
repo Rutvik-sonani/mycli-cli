@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Authentication · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Authentication</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Authentication Guide</h1>
+<p>MyCLI generates a complete authentication system supporting multiple strategies.</p>
+<h2>Strategies</h2>
+<p>| Strategy | Description | |----------|-------------| | JWT | Access tokens with configurable expiry | | Refresh Token | Long-lived refresh token rotation | | Session | Server-side session (via <code>@fastify/session</code> or <code>express-session</code>) | | OAuth | Google, GitHub, Facebook providers | | Magic Link | Passwordless email-based login | | OTP | One-time password via email/SMS | | Passkeys | WebAuthn/FIDO2 passkey authentication | | MFA | TOTP-based multi-factor (Google Authenticator compatible) |</p>
+<h2>Setup</h2>
+<pre><code class="language-bash">my add auth
+# Or with specific strategies:
+my create api --auth --auth-strategies jwt,refresh-token,oauth,mfa</code></pre>
+<h2>Generated Files</h2>
+<ul>
+<li><code>src/modules/auth/auth.service.ts</code> — Core auth logic</li>
+<li><code>src/modules/auth/auth.routes.ts</code> — Login/register/refresh/logout endpoints</li>
+<li><code>src/modules/auth/auth.middleware.ts</code> — Request authentication guard</li>
+<li><code>src/modules/auth/token.service.ts</code> — JWT sign/verify</li>
+<li><code>src/modules/auth/password.service.ts</code> — Argon2 hashing</li>
+<li><code>src/modules/auth/otp.service.ts</code> — OTP generation + verification</li>
+<li><code>src/modules/auth/mfa.service.ts</code> — TOTP generation + verification + recovery codes</li>
+<li><code>src/modules/auth/oauth.service.ts</code> — OAuth state + provider exchange</li>
+<li><code>src/modules/auth/magic-link.service.ts</code> — Magic link generation</li>
+<li><code>src/modules/auth/passkeys.service.ts</code> — WebAuthn credential management</li>
+<li><code>src/modules/auth/verification-token.store.ts</code> — Email verification tokens</li>
+</ul>
+<h2>ORM Support</h2>
+<p>Templates adapt to your configured ORM:</p>
+<ul>
+<li>Prisma, Drizzle, TypeORM, Sequelize, MikroORM, Mongoose</li>
+</ul>
+<h2>Enterprise SSO</h2>
+<pre><code class="language-bash">my add enterprise-auth --providers google,azure-ad,keycloak,saml,ldap</code></pre>
+<p>Generates providers for:</p>
+<ul>
+<li>Azure AD (OIDC)</li>
+<li>Keycloak (OIDC)</li>
+<li>Google Workspace (OIDC)</li>
+<li>SAML 2.0</li>
+<li>LDAP / Active Directory</li>
+</ul></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./deployment.html">← Deployment</a>
+  <a class="doc-next" href="./multi-tenancy.html">Multi-tenancy →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

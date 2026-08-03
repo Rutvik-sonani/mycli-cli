@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Testing · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Testing</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Testing</h1>
+<p>How MyCLI itself is tested, and how generated apps are verified.</p>
+<h2>Unit and integration (Vitest)</h2>
+<p>Packages and the CLI use <strong>Vitest</strong> (<code>vitest run</code>). Prefer package-local <code>tests/*<em>/</em>.test.ts</code>.</p>
+<pre><code class="language-bash">pnpm test                 # workspace tests (as configured)
+pnpm --filter @mycli-cli/cli test</code></pre>
+<h2>Generated-app E2E (Node script)</h2>
+<p>End-to-end coverage for apps created by the CLI lives in:</p>
+<ul>
+<li><code>scripts/e2e-generated-app.mjs</code></li>
+<li>CI: <code>.github/workflows/e2e-generated.yml</code> (nightly + manual)</li>
+</ul>
+<pre><code class="language-bash">pnpm e2e:generated
+# optional:
+MYCLI_E2E_MINIMAL=1 pnpm e2e:generated   # no-database smoke
+MYCLI_E2E_LIVE=0 pnpm e2e:generated      # skip live /health server</code></pre>
+<p>Flow: create project → install → build → run unit/integration tests → optional live <code>/health</code> check.</p>
+<h2>Playwright policy</h2>
+<p><strong>Playwright is not a hard dependency of the MyCLI monorepo.</strong> Browser E2E is opt-in for generated frontends:</p>
+<p>| Layer | Tooling | |-------|---------| | MyCLI packages / CLI | Vitest | | Generated API apps | Vitest + Supertest (via <code>my add testing</code>) | | Generated frontends | Add Playwright (or Cypress) in the app when needed |</p>
+<p>When scaffolding UI tests:</p>
+<pre><code class="language-bash">my add testing --unit vitest --e2e none   # default in many flows
+# In a frontend app, install Playwright yourself, e.g.:
+# pnpm create playwright</code></pre>
+<p>Use Playwright for browser journeys (login UI, checkout). Prefer the generated-app script above for CLI create/add/build regression.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./plugins.html">← Plugins</a>
+  <a class="doc-next" href="./templates.html">Templates →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

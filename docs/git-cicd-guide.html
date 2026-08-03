@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Git & CI/CD · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Git & CI/CD</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html" class="active">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Git &amp; CI/CD Guide (Phase 5 + Phase 10)</h1>
+<p>MyCLI generates GitHub community files, multi-provider CI/CD pipelines, release automation, and <strong>real Git provider automation</strong> via <code>gh</code> and <code>glab</code>.</p>
+<h2>Quick start</h2>
+<pre><code class="language-bash">my add github                    # GitHub workflows + community files + issue templates
+my add github --release          # Include Changesets release workflow
+my git providers                 # List git providers and CLI availability
+my git remote create --provider github --name my-app --dry-run
+my git publish --provider github --name my-app --dry-run
+my create my-app --yes --publish github --dry-run   # Preview remote publish during create
+my add cicd --provider gitlab    # GitLab CI pipeline
+my add cicd --provider azure     # Azure Pipelines
+my add cicd --provider bitbucket  # Bitbucket Pipelines
+my add cicd --provider jenkins   # Jenkinsfile
+my add release                   # Changesets + semantic-release config
+my doctor                        # Validates enabled git/cicd features</code></pre>
+<h2>GitHub (<code>my add github</code>)</h2>
+<p>Generates:</p>
+<p>| File | Purpose | |------|---------| | <code>.github/workflows/ci.yml</code> | CI pipeline (lint, test, build) | | <code>.github/workflows/release.yml</code> | Changesets release (with <code>--release</code>) | | <code>.github/dependabot.yml</code> | Weekly dependency updates | | <code>.github/pull_request_template.md</code> | PR template | | <code>.github/ISSUE_TEMPLATE/bug.yml</code> | Bug report form | | <code>.github/ISSUE_TEMPLATE/feature.yml</code> | Feature request form | | <code>.github/CODEOWNERS</code> | Default reviewers | | <code>.github/LABELS.md</code> | Suggested label list | | <code>SECURITY.md</code> | Security policy | | <code>GITHUB.md</code> | Setup documentation |</p>
+<p>Auto-detects your package manager (pnpm/npm/yarn/bun) for CI commands.</p>
+<p>Options: <code>--node-version</code>, <code>--release</code>, <code>--deploy</code>, <code>--renovate</code></p>
+<p><code>--deploy</code> also enables Renovate for parity with <code>my create</code>.</p>
+<h2>Git provider automation (<code>my git</code>) — Phase 10</h2>
+<p>| Command | Description | |---------|-------------| | <code>my git providers</code> | Show GitHub/GitLab/Bitbucket/Azure DevOps support and CLI status | | <code>my git remote create</code> | Create remote repository via provider CLI | | <code>my git publish</code> | Init → commit → create remote → push | | <code>my git push</code> | Push current branch to remote |</p>
+<p>Providers:</p>
+<p>| Provider | CLI | Automation | |----------|-----|------------| | <code>github</code> | <code>gh</code> | <code>gh repo create … --source=. --remote=origin --push</code> | | <code>gitlab</code> | <code>glab</code> | <code>glab repo create … --remote</code> + push | | <code>bitbucket</code> | <code>bb</code> or REST | <code>BITBUCKET_TOKEN</code> + <code>--owner</code> workspace; creates repo via API | | <code>azure-devops</code> | <code>az</code> | <code>az repos create --project</code> (requires <code>--org</code> and <code>--project</code>) |</p>
+<p>Use <code>--dry-run</code> to preview commands without network access. During <code>my create</code>, pass <code>--publish github</code> to publish after scaffolding (requires authenticated CLI).</p>
+<p>Options: <code>--provider</code>, <code>--name</code>, <code>--owner</code>, <code>--org</code>, <code>--project</code>, <code>--private</code>, <code>--branch</code>, <code>--labels</code>, <code>--dry-run</code></p>
+<p>Pass <code>--labels</code> on publish (GitHub only) to create bug/feature/documentation/security labels via <code>gh label create</code>.</p>
+<h2>CI/CD (<code>my add cicd</code>)</h2>
+<p>| Provider | Output | |----------|--------| | <code>github</code> | <code>.github/workflows/ci.yml</code> | | <code>gitlab</code> | <code>.gitlab-ci.yml</code> | | <code>azure</code> | <code>azure-pipelines.yml</code> | | <code>bitbucket</code> | <code>bitbucket-pipelines.yml</code> | | <code>jenkins</code> | <code>Jenkinsfile</code> |</p>
+<p>Also generates <code>CICD.md</code> with provider-specific documentation.</p>
+<p>Options: <code>--provider</code>, <code>--node-version</code></p>
+<h2>Release (<code>my add release</code>)</h2>
+<p>Generates:</p>
+<p>| File | Purpose | |------|---------| | <code>.changeset/config.json</code> | Changesets configuration | | <code>CHANGELOG.md</code> | Changelog scaffold | | <code>release.config.js</code> | Semantic Release config (semver) | | <code>release.calver.config.js</code> | Calendar versioning config (with <code>--strategy calver</code>) | | <code>RELEASE.md</code> | Release workflow docs |</p>
+<p>Options: <code>--strategy semver|calver</code></p>
+<h2>Commitizen (<code>pnpm commit</code>)</h2>
+<p>When git hooks are enabled during <code>my create</code>, projects include:</p>
+<p>| File / script | Purpose | |---------------|---------| | <code>.cz-config.js</code> | Commitizen adapter config | | <code>pnpm commit</code> | Interactive conventional commit prompt | | Husky <code>pre-commit</code> | Runs <code>lint-staged</code> with Biome |</p>
+<p>Commit conventions: <code>conventional</code>, <code>angular</code>, or <code>custom</code> (via <code>--commit-convention</code>).</p>
+<h2>Quality (<code>my add quality</code>)</h2>
+<p>| File | Purpose | |------|---------| | <code>biome.json</code> | Default lint + format (Biome) | | <code>eslint.config.js</code> | ESLint flat config (with <code>--eslint</code>) | | <code>prettier.config.js</code> | Prettier config (with <code>--prettier</code>) |</p>
+<p>Generated projects include <code>biome.json</code> by default. Use <code>my add quality --eslint --prettier</code> to switch toolchains.</p>
+<h2>JavaScript projects</h2>
+<pre><code class="language-bash">my create js-app --yes --language javascript --skip-install --skip-git</code></pre>
+<p>JavaScript projects skip <code>tsconfig.json</code>, use <code>src/index.js</code>, and generate <code>.js</code> test configs.</p>
+<h2>Official plugin</h2>
+<ul>
+<li><code>@mycli-cli/github</code> — GitHub scaffolding via <code>my plugin install @mycli-cli/github</code></li>
+</ul>
+<h2>Managers</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/github-manager</code> | GitHub community files and workflows | | <code>@mycli-cli/cicd-manager</code> | Multi-provider CI/CD pipelines | | <code>@mycli-cli/release-manager</code> | Changesets and semantic-release setup | | <code>@mycli-cli/git-manager</code> | Local git lifecycle, provider adapters (<code>gh</code>/<code>glab</code>/<code>az</code>) |</p>
+<p>Templates live in <code>apps/cli/templates/features/{github,cicd,release}/</code>.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./cloud-deploy-guide.html">← Cloud deploy</a>
+  <a class="doc-next" href="./ide-guide.html">IDE & DevContainer →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

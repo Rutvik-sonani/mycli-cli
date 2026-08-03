@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Publishing · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Publishing</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html" class="active">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Publishing @mycli-cli/cli</h1>
+<p>MyCLI uses <a href="https://github.com/changesets/changesets">Changesets</a> for version management and npm publishing.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>npm account with publish access to the <strong><code>@mycli-cli</code></strong> scope (org name must be <code>mycli-cli</code>)</li>
+<li><code>NPM_TOKEN</code> set in CI (GitHub Actions secret) for automated releases</li>
+<li>All packages built: <code>pnpm build</code></li>
+</ul>
+<h2>Local release (maintainers)</h2>
+<p>1. <strong>Add a changeset</strong> when shipping user-facing changes:</p>
+<p>   ``<code>bash    pnpm changeset    </code>``</p>
+<p>   Select affected packages (typically <code>@mycli-cli/cli</code> and any updated managers), choose semver bump, and write a summary.</p>
+<p>2. <strong>Version packages</strong> (updates <code>package.json</code> versions and changelog):</p>
+<p>   ``<code>bash    pnpm version-packages    </code>``</p>
+<p>3. <strong>Publish to npm</strong>:</p>
+<p>   ``<code>bash    pnpm release    </code>``</p>
+<p>   This runs <code>pnpm build</code> then <code>changeset publish</code>.</p>
+<h2>CI release</h2>
+<p>The repository includes <a href="./.github/workflows/release.yml"><code>.github/workflows/release.yml</code></a>. On every push to <code>main</code> it:</p>
+<p>1. Runs <code>pnpm install --frozen-lockfile</code> 2. Runs <code>pnpm build</code> 3. Uses <a href="https://github.com/changesets/action">changesets/action</a> with <code>NPM_TOKEN</code></p>
+<p>The action opens a “Version packages” PR when changesets exist; merging that PR triggers <code>pnpm release</code> (<code>pnpm build &amp;&amp; changeset publish</code>).</p>
+<h3>Required secrets</h3>
+<p>| Secret | Purpose | |--------|---------| | <code>NPM_TOKEN</code> | npm <strong>Automation</strong> token with publish access to <code>@mycli-cli/*</code> (not a classic token that requires OTP) | | <code>GITHUB_TOKEN</code> | Provided by Actions — used to open version PRs |</p>
+<p>The Release workflow writes auth to <strong><code>$HOME/.npmrc</code></strong> (user-level). pnpm ignores <code>_authToken</code> with <code>${…}</code> expansion in a <strong>project</strong> <code>.npmrc</code> for security — that caused <code>ERR_PNPM_OTP_NON_INTERACTIVE</code> when CI wrote the token into the repo <code>.npmrc</code>.</p>
+<h3>Fixing <code>ERR_PNPM_OTP_NON_INTERACTIVE</code> / <code>user undefined</code></h3>
+<p>If logs say <strong><code>user undefined</code></strong> or <strong><code>rate limited exceeded</code> as user undefined</strong>, CI is publishing <strong>without login</strong>. That is not a package bug — auth never attached.</p>
+<p>1. npmjs.com → Access Tokens → <strong>Generate New Token</strong> → type <strong>Automation</strong> (required; Classic + 2FA needs OTP and fails in CI) 2. Permission: read + write for <code>@mycli-cli</code> packages / org 3. GitHub repo → Settings → Secrets → Actions → set <code>NPM_TOKEN</code> to that token 4. Commit/push the Release workflow that writes the <strong>expanded</strong> token to <code>$HOME/.npmrc</code> and <code>.npmrc</code> (never a literal <code>${NPM_TOKEN}</code> string in the file) 5. Re-run <strong>Release</strong> only after <code>npm whoami</code> succeeds in the workflow step</p>
+<h3>Fixing <code>E429</code> (Too Many Requests)</h3>
+<p>Anonymous / failed-auth publishes burn the public rate limit quickly (<code>user undefined</code>).   <strong>Wait 30–60 minutes</strong>, fix auth first, then re-run once. Do not keep re-running while auth is broken.</p>
+<h3>Fixing <code>E404</code> on <code>PUT https://registry.npmjs.org/@mycli-cli%2f…</code></h3>
+<p>npm returns <strong>404</strong> (not 403) when the token cannot publish to that scope. Check:</p>
+<p>1. Org exists as <strong><code>mycli-cli</code></strong>: https://www.npmjs.com/settings/~/organizations   2. You are an <strong>Owner</strong> of that org   3. Token is <strong>Automation</strong> (or Granular with write to <code>@mycli-cli</code> packages) from the same account   4. GitHub secret is named exactly <code>NPM_TOKEN</code>   5. Re-run the <strong>Release</strong> workflow after fixing token/org  </p>
+<p>Local check:</p>
+<pre><code class="language-bash">npm whoami
+npm org ls mycli-cli</code></pre>
+<h2>Publishing official plugins</h2>
+<p>Official plugins live under <code>plugins/official/<em></code> as <code>@mycli-cli/plugin-</em></code> packages. They are <strong>not</strong> in the default Changesets linked group (only core CLI packages are linked today).</p>
+<p>To publish plugins:</p>
+<p>1. Ensure the plugin <code>package.json</code> has <code>&quot;publishConfig&quot;: { &quot;access&quot;: &quot;public&quot; }</code> and is not <code>&quot;private&quot;: true</code>. 2. Add a changeset selecting the plugin package(s) you changed. 3. Run the normal <code>version-packages</code> → merge PR → <code>release</code> flow.</p>
+<p>Plugins are loaded at runtime when users run <code>my plugin add &lt;name&gt;</code>; publishing them to npm makes installation work outside the monorepo:</p>
+<pre><code class="language-bash">npm install -g @mycli-cli/plugin-postgres
+my plugin add postgres</code></pre>
+<p>For local development, plugins resolve from the workspace via <code>pnpm build</code> without publishing.</p>
+<h2>Documentation site (public pages, private platform)</h2>
+<p>The full platform monorepo (<code>my-cli</code>) stays <strong>private</strong>.</p>
+<p>Public docs/landing live in a separate repo: <a href="https://github.com/Rutvik-sonani/mycli-cli"><code>Rutvik-sonani/mycli-cli</code></a>   Live site: <a href="https://rutvik-sonani.github.io/mycli-cli/">https://rutvik-sonani.github.io/mycli-cli/</a></p>
+<p>Build locally:</p>
+<pre><code class="language-bash">pnpm --filter @mycli-cli/website build
+# output: apps/website/dist</code></pre>
+<p>CI (<code>.github/workflows/docs.yml</code>) builds the site in the private monorepo and publishes <strong>only</strong> <code>apps/website/dist</code> to <code>mycli-cli</code> branch <code>gh-pages</code>.</p>
+<h3>One-time setup (secure deploy key)</h3>
+<p>CI uses a <strong>random ed25519 SSH deploy key</strong> (not a broad PAT):</p>
+<p>1. Keep <code>my-cli</code> <strong>private</strong>; keep <code>mycli-cli</code> <strong>public</strong> (docs-only). 2. On private <code>my-cli</code>: secret <code>ACTIONS_DEPLOY_KEY</code> = deploy key <strong>private</strong> half. 3. On public <code>mycli-cli</code>: Deploy keys → add the matching <strong>public</strong> key with <strong>Allow write access</strong>. 4. On <code>mycli-cli</code>: Settings → Pages → <strong>Deploy from a branch</strong> → <code>gh-pages</code> / root. 5. Push to <code>main</code> on <code>my-cli</code> (or run Docs workflow) to publish.</p>
+<p>Do <strong>not</strong> commit key material. Local generation lives under <code>.tmp-secrets/</code> (gitignored).</p>
+<h2>Verify before publish</h2>
+<pre><code class="language-bash">pnpm build
+pnpm --filter @mycli-cli/cli test
+pnpm e2e:generated</code></pre>
+<h2>Fix broken <code>workspace:*</code> installs</h2>
+<p>If <code>npm install -g @mycli-cli/cli</code> fails with <code>EUNSUPPORTEDPROTOCOL workspace:*</code>, packages were published without rewriting monorepo deps.</p>
+<p><strong>Fix / republish (from repo root, interactive terminal for npm OTP):</strong></p>
+<pre><code class="language-bash">pnpm build
+node scripts/publish-fixed-packages.mjs
+# enters OTP when prompted; publishes packages@1.0.2 and CLI@1.0.3
+# with workspace:* rewritten to real versions</code></pre>
+<p>Dry-run (bump check only; still bumps versions if needed):</p>
+<pre><code class="language-bash">node scripts/publish-fixed-packages.mjs --dry-run</code></pre>
+<p>Then verify:</p>
+<pre><code class="language-bash">npm view @mycli-cli/cli-engine@1.0.2 dependencies
+# must NOT contain workspace:*
+npm install -g @mycli-cli/cli@1.0.3
+my --version</code></pre>
+<h2>Install for end users</h2>
+<p>After publish:</p>
+<pre><code class="language-bash">npm install -g @mycli-cli/cli
+my create my-app --yes</code></pre>
+<p>Generated apps are scaffolds — configure env, database, and mail before production deploy. See <a href="./apps/cli/templates/features/env/ENVIRONMENT.md.ejs">ENVIRONMENT.md</a> in generated projects.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./contributing.html">← Contributing</a>
+  <span></span>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

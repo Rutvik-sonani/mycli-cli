@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Services · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Services</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html" class="active">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Infrastructure Services Guide (Phase 12)</h1>
+<p>MyCLI generates production-ready service modules for cache, queues, domain events, email, file storage, and payments.</p>
+<h2>Quick start</h2>
+<pre><code class="language-bash">my add cache
+my add queue
+my add events
+my add mail --provider smtp
+my add storage --provider s3
+my add upload --provider s3
+my add payment --provider stripe
+my doctor</code></pre>
+<h2>Services</h2>
+<p>| Command | Module | Dependencies | |---------|--------|--------------| | <code>my add cache</code> | <code>src/services/cache/</code> | <code>ioredis</code> (redis), none (memory), <code>memcached</code> | | <code>my add queue</code> | <code>src/services/queue/</code> | <code>bullmq</code>+<code>ioredis</code>, <code>amqplib</code>, <code>kafkajs</code>, <code>@aws-sdk/client-sqs</code> | | <code>my add events</code> | <code>src/services/events/</code> | <code>ioredis</code> | | <code>my add mail</code> | <code>src/services/mail/</code> | <code>nodemailer</code>, <code>@sendgrid/mail</code>, <code>mailgun.js</code>, <code>@aws-sdk/client-ses</code> | | <code>my add storage</code> | <code>src/services/storage/</code> | <code>@aws-sdk/client-s3</code>, <code>cloudinary</code>, <code>@google-cloud/storage</code>, <code>@azure/storage-blob</code> | | <code>my add upload</code> | <code>src/services/storage/</code> + upload route | multipart + optional <code>sharp</code> resize / chunked upload | | <code>my add payment</code> | <code>src/services/payment/</code> | <code>stripe</code>, Razorpay/PayPal/Paddle HTTP clients |</p>
+<p>Each command:</p>
+<ul>
+<li>Generates service source files under <code>src/services/&lt;name&gt;/</code></li>
+<li>Appends environment variables to <code>.env.example</code></li>
+<li>Writes <code>docs/&lt;service&gt;.md</code> and updates <code>SERVICES.md</code></li>
+<li>Registers exports in <code>src/services/index.ts</code></li>
+<li>Installs npm dependencies</li>
+</ul>
+<h2>Providers</h2>
+<p>Use <code>--provider</code> where supported:</p>
+<p>| Service | Providers | |---------|-----------| | Cache | <code>redis</code> (default), <code>memory</code>, <code>memcached</code> | | Queue | <code>bullmq</code> (default), <code>rabbitmq</code>, <code>kafka</code>, <code>sqs</code> | | Mail | <code>smtp</code> (default), <code>sendgrid</code>, <code>mailgun</code>, <code>ses</code> | | Storage / Upload | <code>s3</code> (default), <code>local</code>, <code>cloudinary</code>, <code>gcs</code>, <code>azure</code> | | Payment | <code>stripe</code> (default), <code>razorpay</code>, <code>paypal</code>, <code>paddle</code> |</p>
+<h2>Payment webhooks</h2>
+<p><code>my add payment</code> registers provider webhook routes (e.g. <code>POST /webhooks/stripe</code>) in <code>src/routes/features.ts</code>.</p>
+<p>Configure the matching webhook secret in <code>.env</code> (<code>STRIPE_WEBHOOK_SECRET</code>, etc.).</p>
+<h2>Manager</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/services-manager</code> | Cache, queue, events, mail, storage, payment scaffolding |</p>
+<p>Templates live in <code>apps/cli/templates/features/services/</code>.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./features-guide.html">← Features</a>
+  <a class="doc-next" href="./secrets.html">Secrets →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

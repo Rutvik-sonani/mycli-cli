@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Features · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Features</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html" class="active">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Features Guide (Phase 3)</h1>
+<p>Phase 3 adds production-ready <strong>auth</strong>, <strong>RBAC</strong>, <strong>database/ORM</strong>, <strong>API documentation</strong>, and <strong>testing</strong> scaffolds — all generated from EJS templates (no string-concat stubs).</p>
+<h2>Quick start</h2>
+<pre><code class="language-bash">my create my-api --yes --skip-install
+cd my-api
+
+my add database --orm prisma --database postgresql
+my add auth
+my add rbac
+my add swagger --provider swagger
+my add testing --unit vitest --e2e playwright
+
+my role create admin
+my permission create user.read
+my permission assign admin --permission user.read
+my role assign user-1 --role admin</code></pre>
+<p>---</p>
+<h2>Auto-registration</h2>
+<p><code>my add auth</code>, <code>my add rbac</code>, and <code>my add swagger</code> automatically:</p>
+<p>1. Export the module from <code>src/modules/index.ts</code> (auth/rbac) 2. Register Fastify plugins in <code>src/routes/features.ts</code> 3. Wire <code>registerFeatureRoutes(app)</code> from the generated Fastify entrypoint</p>
+<pre><code class="language-ts">// src/routes/features.ts (maintained by MyCLI)
+await registerAuthRoutes(app);
+await registerRbacRoutes(app);
+await registerDocsRoutes(app);</code></pre>
+<p>---</p>
+<h2>Authentication (<code>my add auth</code>)</h2>
+<p>Generates a full auth module under <code>src/modules/auth/</code>.</p>
+<h3>Strategies (multi-select when interactive)</h3>
+<p>| Strategy | Generated artifacts | |----------|---------------------| | <code>jwt</code> | <code>token.service.ts</code>, bearer middleware | | <code>refresh-token</code> | refresh endpoint, token rotation | | <code>session</code> | <code>session.service.ts</code>, session env vars | | <code>oauth</code> | <code>oauth.service.ts</code>, provider env vars | | <code>magic-link</code> | <code>magic-link.service.ts</code> | | <code>otp</code> | <code>otp.service.ts</code> | | <code>passkeys</code> | scaffold hooks | | <code>mfa</code> | <code>mfa.service.ts</code> |</p>
+<h3>Endpoints</h3>
+<ul>
+<li><code>POST /auth/register</code></li>
+<li><code>POST /auth/login</code></li>
+<li><code>POST /auth/logout</code></li>
+<li><code>POST /auth/forgot-password</code></li>
+<li><code>POST /auth/reset-password</code></li>
+<li><code>POST /auth/verify-email/send</code></li>
+<li><code>GET|POST /auth/verify-email</code></li>
+<li><code>POST /auth/refresh</code> (when refresh-token enabled)</li>
+<li><code>GET /auth/me</code> (protected)</li>
+</ul>
+<h3>Dependencies</h3>
+<ul>
+<li><code>jose</code> — JWT sign/verify</li>
+<li><code>@prisma/client</code> — when ORM is prisma</li>
+</ul>
+<h3>Files</h3>
+<pre><code>src/modules/auth/
+  auth.controller.ts
+  auth.service.ts
+  auth.middleware.ts
+  auth.guard.ts
+  token.service.ts
+  password.service.ts
+  user.repository.ts
+  auth.routes.ts
+  index.ts
+AUTH.md
+.env.example  (appended with JWT_* vars)</code></pre>
+<p>---</p>
+<h2>RBAC (<code>my add rbac</code>)</h2>
+<p>Generates role/permission module and Prisma models when database is configured.</p>
+<h3>CLI commands</h3>
+<pre><code class="language-bash">my role create admin --description &quot;Administrator&quot;
+my role list
+my role assign &lt;userId&gt; --role admin
+
+my permission create user.read
+my permission list
+my permission assign admin --permission user.read</code></pre>
+<p>Role/permission state is stored in <code>.mycli/rbac.json</code>. Run <code>my rbac sync</code> or <code>pnpm db:seed</code> — seeders upsert the CLI store into the database when the file is present.</p>
+<h3>Prisma models (when <code>includeRbac: true</code>)</h3>
+<ul>
+<li><code>Role</code>, <code>Permission</code>, <code>RolePermission</code>, <code>UserRole</code></li>
+</ul>
+<h3>Middleware</h3>
+<pre><code class="language-ts">import { createRbacMiddleware } from './modules/rbac/index.js';
+const rbac = createRbacMiddleware(new RbacService());
+app.get('/admin', { preHandler: [authMiddleware, rbac.role('admin')] }, handler);</code></pre>
+<p>---</p>
+<h2>Database (<code>my add database</code>)</h2>
+<p>Aliases: <code>my add db</code></p>
+<h3>Supported combinations</h3>
+<p>| Database | ORM | Status | |----------|-----|--------| | PostgreSQL | Prisma | ✅ full schema + client | | PostgreSQL | Drizzle | ✅ schema + drizzle.config | | MySQL | Prisma/Drizzle | ✅ env + templates | | SQLite | Prisma/Drizzle | ✅ |</p>
+<h3>Generated files (Prisma)</h3>
+<pre><code>prisma/schema.prisma    # User, RefreshToken, optional RBAC models
+prisma/seed.ts
+src/database/prisma.client.ts
+.env / .env.example
+DATABASE.md
+docs/database-postgres.md  (with postgres plugin)</code></pre>
+<h3>Options</h3>
+<pre><code class="language-bash">my add database --database postgresql --orm prisma
+my add database --database sqlite --orm drizzle</code></pre>
+<p>---</p>
+<h2>API Documentation (<code>my add swagger</code>)</h2>
+<p>Aliases: <code>my add openapi</code>, <code>my add scalar</code>, <code>my add redoc</code></p>
+<h3>Providers</h3>
+<p>| Provider | Package | Route | |----------|---------|-------| | <code>swagger</code> | <code>@fastify/swagger-ui</code> | <code>/docs</code> | | <code>scalar</code> | <code>@scalar/fastify-api-reference</code> | <code>/docs</code> | | <code>redoc</code> | <code>@fastify/static</code> + Redoc CDN | <code>/docs</code> | | <code>openapi</code> | none (JSON only) | <code>/openapi.json</code> |</p>
+<p>Also generates Postman (<code>postman/collection.json</code>) and Bruno (<code>bruno/</code>) clients.</p>
+<pre><code class="language-bash">my add swagger --provider scalar</code></pre>
+<p>---</p>
+<h2>Testing (<code>my add testing</code>)</h2>
+<h3>Unit frameworks</h3>
+<ul>
+<li><strong>vitest</strong> (default) — <code>vitest.config.ts</code></li>
+<li><strong>jest</strong> — <code>jest.config.ts</code> with <code>ts-jest</code></li>
+</ul>
+<h3>Factories &amp; fixtures</h3>
+<ul>
+<li><code>tests/factories/user.factory.ts</code> — <code>buildUser()</code></li>
+<li><code>tests/fixtures/sample.fixture.json</code></li>
+</ul>
+<h3>Integration</h3>
+<ul>
+<li><strong>supertest</strong> — <code>tests/integration/health.test.ts</code></li>
+</ul>
+<h3>E2E</h3>
+<ul>
+<li><strong>playwright</strong> — <code>playwright.config.ts</code>, <code>tests/e2e/health.spec.ts</code></li>
+<li><strong>cypress</strong> — <code>cypress.config.ts</code></li>
+</ul>
+<pre><code class="language-bash">my add testing --unit jest --e2e playwright</code></pre>
+<p>---</p>
+<h2>Services &amp; platforms</h2>
+<pre><code class="language-bash">my add payment --provider stripe|razorpay|paypal|paddle
+my add storage --provider s3|local|cloudinary|gcs|azure
+my add upload --provider s3   # chunked upload + optional ?resize=
+my add mail --provider smtp|sendgrid|mailgun|ses
+my add search --provider meilisearch|elasticsearch|algolia|typesense
+my add observability --logger pino|winston   # includes Sentry, Datadog, New Relic, Jaeger/Zipkin
+my add ui --library tailwind|shadcn|mui|antd|chakra|mantine</code></pre>
+<h3>Ecommerce preset</h3>
+<pre><code class="language-bash">my create shop --preset ecommerce --yes
+# or
+my create ecommerce --yes
+# retrofit an existing project:
+my add ecommerce</code></pre>
+<p>Scaffolds products, cart, orders modules + Stripe payment wiring. See <a href="./docs/ecommerce.md">docs/ecommerce.md</a>.</p>
+<h3>Secrets sync &amp; runtime loader</h3>
+<pre><code class="language-bash">my deploy secrets sync --provider aws-sm|vault|gcp|azure --dry-run
+# Generated apps include src/config/load-secrets.ts
+# SECRETS_RUNTIME_PROVIDER=aws-sm|vault|gcp|azure</code></pre>
+<p>See <a href="./docs/secrets.md">docs/secrets.md</a>.</p>
+<h3>Commit &amp; release</h3>
+<pre><code class="language-bash">my commit -m &quot;feat: add checkout&quot;
+my commit --cz
+my release status
+my release version
+my release publish</code></pre>
+<p>---</p>
+<h2>Create wizard integration</h2>
+<p>When running <code>my create</code> interactively (without <code>--yes</code>), you can opt in to:</p>
+<ul>
+<li>Authentication (JWT + refresh)</li>
+<li>RBAC (requires auth)</li>
+<li>Swagger API docs</li>
+</ul>
+<p>These are applied automatically during project generation.</p>
+<p>---</p>
+<h2>Official plugins</h2>
+<p>| Plugin | Command equivalent | |--------|-------------------| | <code>@mycli-cli/auth</code> | <code>my add auth</code> | | <code>@mycli-cli/rbac</code> | <code>my add rbac</code> | | <code>@mycli-cli/prisma</code> | <code>my add database --orm prisma</code> | | <code>@mycli-cli/postgres</code> (+ mysql/mongo/redis/…) | <code>my add database --database …</code> | | <code>@mycli-cli/swagger</code> | <code>my add swagger</code> | | <code>@mycli-cli/stripe</code> | <code>my add payment --provider stripe</code> | | <code>@mycli-cli/aws</code> / <code>azure</code> / <code>gcp</code> | cloud/terraform scaffolds | | <code>@mycli-cli/fly</code> / <code>railway</code> / <code>digitalocean</code> / <code>render</code> / <code>vercel</code> / <code>netlify</code> | <code>my deploy setup --provider …</code> | | <code>@mycli-cli/github</code> / <code>gitlab</code> / <code>bitbucket</code> / <code>jenkins</code> / <code>azure-pipelines</code> | <code>my add github</code> / <code>my add cicd --provider …</code> | | <code>@mycli-cli/docker</code> / <code>kubernetes</code> / <code>ai</code> | matching <code>my add …</code> features |</p>
+<p>Install via <code>my plugin install @mycli-cli/auth</code> (or slug).</p>
+<p>---</p>
+<h2>Architecture</h2>
+<p>All feature managers follow the same pattern:</p>
+<pre><code>my add auth
+  → AuthManager.setup()
+  → TemplateEngine.renderFile('features/auth/*.ejs')
+  → FileSystem.write()
+  → dependency-manager updates package.json</code></pre>
+<p>See <a href="./ARCHITECTURE.md">ARCHITECTURE.md</a> for the full layering diagram.</p>
+<p>---</p>
+<h2>Runtime diagnostics</h2>
+<h3><code>my doctor</code></h3>
+<p>Checks Node.js, package manager, Git, Docker, environment files, <strong>database TCP connectivity</strong> (from <code>DATABASE_URL</code>), and dependency audit summary.</p>
+<pre><code class="language-bash">my doctor
+my doctor --skip-audit</code></pre>
+<p>Database check opens a TCP connection to the host/port parsed from <code>DATABASE_URL</code> (PostgreSQL, MySQL, MongoDB). It does not authenticate or run queries.</p>
+<h3><code>my security</code></h3>
+<p>| Action | Description | |--------|-------------| | <code>my security setup</code> | Helmet, CORS, rate limiting scaffolds | | <code>my security audit</code> | Runs <code>npm</code>/<code>pnpm</code> audit and reports vulnerability counts | | <code>my security scan-secrets</code> | Regex scan for likely secrets under the project tree |</p>
+<h3><code>my upgrade</code></h3>
+<p>Safely adds missing MyCLI scaffold files (ENVIRONMENT.md, biome.json, .editorconfig) without touching <code>src/modules/</code>. State is tracked in <code>.mycli/upgrade-state.json</code>.</p>
+<pre><code class="language-bash">my upgrade
+my upgrade --dry-run
+my upgrade --force</code></pre></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./database-guide.html">← Database</a>
+  <a class="doc-next" href="./services-guide.html">Services →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

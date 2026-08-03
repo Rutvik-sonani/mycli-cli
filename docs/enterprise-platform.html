@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Enterprise platform · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Enterprise platform</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Enterprise platform phases</h1>
+<p>MyCLI enterprise engines map 1:1 to the extension phases in <code>req.md</code>.</p>
+<p>| Phase | CLI / package | Outcome | |-------|---------------|---------| | 1 Architecture | <code>my create --architecture-style …</code>, <code>@mycli-cli/architecture-engine</code> | MVC, modular monolith, clean, hexagonal, DDD, microservice, monorepo, polyrepo | | 2 DDD | <code>my make domain &lt;name&gt;</code>, <code>@mycli-cli/domain-engine</code> | Entities, value objects, aggregates, domain events | | 3 CQRS | <code>my add cqrs</code>, <code>@mycli-cli/cqrs-engine</code> | Command/Query buses + handlers | | 4 Events | <code>my add event-system</code>, <code>@mycli-cli/event-engine</code> | Publishers, handlers, audit bridge | | 5 Multi-tenancy | <code>my add tenancy --mode …</code>, <code>@mycli-cli/tenancy-engine</code> | single-db / schema-per-tenant / db-per-tenant | | 6 Enterprise identity | <code>my add enterprise-auth</code>, <code>@mycli-cli/identity-engine</code> | OIDC, SAML, LDAP/AD (env-gated; dev stubs without credentials) | | 7 Audit &amp; compliance | <code>my add audit</code>, <code>my compliance check</code> | Audit middleware + compliance signals | | 8 Observability | <code>my add observability</code> | OpenTelemetry, Sentry/Datadog/New Relic monitors | | 9 Security | <code>my security audit</code>, <code>my add security</code> | Secret scan, hardening middleware | | 10 Governance &amp; marketplace | <code>my governance</code>, <code>my plugin</code>, <code>my template</code> | Policy checks + local/npm/remote catalogs (<code>MYCLI_REGISTRY_URL</code>) | | 11 Upgrade | <code>my upgrade</code>, <code>@mycli-cli/migration-engine</code> | Scaffold upgrades with backups + state |</p>
+<h2>Verification without live cloud/IdP credentials</h2>
+<pre><code class="language-bash">pnpm e2e:features          # auth, payment, frontend, polyrepo, deploy dry-run
+pnpm e2e:generated         # create → build → live /health (+ /auth/me contract)
+pnpm e2e:orm-matrix        # ORM generator matrix</code></pre>
+<p>Live AWS/Azure/GCP apply and real IdP logins still require project credentials (<code>MYCLI_LIVE_CLOUD=1</code> / provider secrets) and are intentionally out of CI.</p>
+<h2>Docs</h2>
+<ul>
+<li><a href="../PLATFORM_GUIDE.md">PLATFORM_GUIDE.md</a></li>
+<li><a href="../MARKETPLACE_GUIDE.md">MARKETPLACE_GUIDE.md</a></li>
+<li><a href="../CLOUD_DEPLOY_GUIDE.md">CLOUD_DEPLOY_GUIDE.md</a></li>
+<li><a href="../FEATURES_GUIDE.md">FEATURES_GUIDE.md</a></li>
+</ul></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./audit.html">← Audit</a>
+  <a class="doc-next" href="./plugins.html">Plugins →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

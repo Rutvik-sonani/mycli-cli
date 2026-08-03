@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/getting-started.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/architecture.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/plugin-guide.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/marketplace-guide.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/generator-guide.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/database-guide.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/features-guide.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/services-guide.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/secrets.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/ecommerce.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/governance.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/compliance.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/privacy.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/audit.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/enterprise-platform.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/plugins.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/testing.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/templates.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/infra-guide.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/cloud-deploy-guide.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/git-cicd-guide.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/ide-guide.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/platform-guide.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/cli-reference.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/deployment.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/authentication.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/multi-tenancy.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/observability.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/contributing.html</loc></url>
+  <url><loc>https://rutvik-sonani.github.io/mycli-cli/docs/publishing.html</loc></url>
+</urlset>

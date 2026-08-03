@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Platform · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Platform</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html" class="active">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Platform Features Guide (Phase 13)</h1>
+<p>MyCLI generates observability, security, tenancy, feature flags, and search modules for production Node.js apps.</p>
+<h2>Quick start</h2>
+<pre><code class="language-bash">my add observability
+my security setup              # or: my add security
+my add tenancy
+my add feature-flags
+my add search --provider meilisearch
+my doctor</code></pre>
+<h2>Features</h2>
+<p>| Command | Module | Purpose | |---------|--------|---------| | <code>my add observability</code> | <code>src/platform/observability/</code> | Pino logging, OpenTelemetry, <code>/metrics</code> | | <code>my add security</code> / <code>my security setup</code> | <code>src/platform/security/</code> | Helmet, CORS, rate limiting | | <code>my add tenancy</code> | <code>src/platform/tenancy/</code> | Multi-tenant context via header | | <code>my add feature-flags</code> | <code>src/platform/feature-flags/</code> | JSON-backed feature toggles | | <code>my add search</code> | <code>src/platform/search/</code> | Meilisearch or Elasticsearch |</p>
+<p>Each command generates source files, <code>docs/&lt;feature&gt;.md</code>, env vars in <code>.env.example</code>, and updates <code>PLATFORM.md</code>.</p>
+<h2>Tenancy modes</h2>
+<p>When adding tenancy, choose an isolation strategy:</p>
+<pre><code class="language-bash">my add tenancy --mode single-db              # default — shared DB, row-level filtering
+my add tenancy --mode schema-per-tenant      # PostgreSQL schema per tenant
+my add tenancy --mode db-per-tenant          # dedicated DATABASE_URL per tenant</code></pre>
+<p>| Mode | Generated files | Env vars | |------|-----------------|----------| | <code>single-db</code> | <code>tenant.middleware.ts</code>, context | <code>TENANT_HEADER</code>, <code>DEFAULT_TENANT</code> | | <code>schema-per-tenant</code> | + <code>tenant.resolver.ts</code> (schema) | + <code>TENANT_SCHEMA_PREFIX</code> | | <code>db-per-tenant</code> | + <code>tenant.resolver.ts</code> (DB URL) | + <code>DATABASE_URL_&lt;TENANT&gt;</code> |</p>
+<p>The selected mode is stored in <code>.myclirc.json</code> under <code>extensions.tenancyMode</code> and documented in <code>docs/tenancy.md</code>.</p>
+<h2>Search providers</h2>
+<pre><code class="language-bash">my add search --provider meilisearch    # default
+my add search --provider elasticsearch</code></pre>
+<h2>Feature flag aliases</h2>
+<pre><code class="language-bash">my add feature-flags
+my add flags              # alias</code></pre>
+<h2>Manager</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/platform-manager</code> | Observability, security, tenancy, feature-flags, search |</p>
+<p>Templates live in <code>apps/cli/templates/features/platform/</code>.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./ide-guide.html">← IDE & DevContainer</a>
+  <a class="doc-next" href="./cli-reference.html">CLI reference →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

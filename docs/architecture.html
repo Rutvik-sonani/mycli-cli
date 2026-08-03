@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Architecture · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Architecture</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html" class="active">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Architecture</h1>
+<p>MyCLI is a pnpm + Turborepo monorepo of independent TypeScript packages.</p>
+<h2>CLI layout: <code>apps/cli</code> vs <code>packages/cli-engine</code></h2>
+<p>| Path | Role | |------|------| | <strong><code>apps/cli</code></strong> | Shipped binary (<code>my</code>). Command handlers, EJS templates (<code>apps/cli/templates/</code>), locales, Vitest integration tests, and build scripts that copy templates/locales to <code>dist/</code>. | | <strong><code>packages/cli-engine</code></strong> | Reusable CLI orchestrator — wires <code>ApplicationContext</code>, command registry, prompts, config, plugins, and telemetry. No templates or user-facing commands. | | *<em><code>packages/</em>-manager</code><strong> | Domain logic consumed by command handlers (auth, docker, git, …). Managers render templates; they do not parse argv. | | </strong><code>packages/command-engine</code>** | argv parsing and command registration primitives used by both <code>cli-engine</code> and plugins. |</p>
+<p>There is <strong>no</strong> <code>packages/cli</code> package. The executable lives in <code>apps/cli</code>; library consumers import <code>@mycli-cli/cli-engine</code> and individual managers.</p>
+<pre><code>apps/cli/src/commands/*.ts  →  @mycli-cli/*-manager  →  @mycli-cli/template-engine  →  apps/cli/templates/
+         ↓
+  @mycli-cli/cli-engine (orchestration)</code></pre>
+<h2>Layering</h2>
+<pre><code>Command → Handler → Service/Manager → Generator → TemplateEngine → FileSystem</code></pre>
+<h2>Core packages</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/core</code> | Context, DI, events, logger, errors, utilities | | <code>@mycli-cli/cli-engine</code> | CLI orchestration | | <code>@mycli-cli/command-engine</code> | Command registry &amp; argv parsing | | <code>@mycli-cli/prompt-engine</code> | Interactive prompts | | <code>@mycli-cli/template-engine</code> | EJS template rendering | | <code>@mycli-cli/generator-engine</code> | Artisan-style generators | | <code>@mycli-cli/filesystem</code> | Safe filesystem I/O | | <code>@mycli-cli/config-manager</code> | <code>.myclirc.json</code> configuration | | <code>@mycli-cli/plugin-system</code> | Plugin discovery &amp; lifecycle | | <code>@mycli-cli/dependency-manager</code> | npm/pnpm/yarn/bun |</p>
+<h2>Feature managers (Phase 3)</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/auth-manager</code> | JWT/OAuth/session auth modules via EJS templates | | <code>@mycli-cli/rbac-manager</code> | Roles, permissions, middleware, CLI store | | <code>@mycli-cli/database-manager</code> | Prisma/Drizzle schemas, env, postgres plugin | | <code>@mycli-cli/api-manager</code> | Swagger/Scalar/Redoc, Postman/Bruno clients | | <code>@mycli-cli/testing-manager</code> | Vitest/Jest, Supertest, Playwright/Cypress |</p>
+<p>Templates live in <code>apps/cli/templates/features/{auth,rbac,database,api-docs,testing}/</code>.</p>
+<h2>Infrastructure managers (Phase 4)</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/docker-manager</code> | Dockerfile, Compose, nginx via EJS templates | | <code>@mycli-cli/kubernetes-manager</code> | K8s manifests and Helm charts | | <code>@mycli-cli/deployment-manager</code> | Terraform (AWS/GCP/Azure) and PaaS configs |</p>
+<p>Templates live in <code>apps/cli/templates/features/{docker,kubernetes,helm,terraform,deploy}/</code>.</p>
+<p>See <a href="./INFRA_GUIDE.md">INFRA_GUIDE.md</a> for commands and output paths.</p>
+<h2>Git &amp; CI/CD managers (Phase 5)</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/github-manager</code> | GitHub workflows, dependabot, SECURITY, PR template | | <code>@mycli-cli/cicd-manager</code> | CI/CD for GitHub, GitLab, Azure, Bitbucket, Jenkins | | <code>@mycli-cli/release-manager</code> | Changesets, changelog, semantic-release config | | <code>@mycli-cli/git-manager</code> | Local git init, remotes, provider automation (<code>gh</code>/<code>glab</code>) | | <code>@mycli-cli/ide-manager</code> | DevContainer, VS Code, and Cursor IDE scaffolding | | <code>@mycli-cli/services-manager</code> | Cache, queue, events, mail, storage, payment services | | <code>@mycli-cli/platform-manager</code> | Observability, security, tenancy, feature-flags, search | | <code>@mycli-cli/ai-manager</code> | AI-assisted scaffolding and generation | | <code>@mycli-cli/plugin-sdk</code> | Community plugin authoring utilities |</p>
+<p>Templates live in <code>apps/cli/templates/features/{github,cicd,release}/</code>.</p>
+<p>See <a href="./GIT_CICD_GUIDE.md">GIT_CICD_GUIDE.md</a> for commands and output paths.</p>
+<h2>Cloud deployment managers (Phase 6)</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/cloud-manager</code> | Runtime deploy push, status, logs, rollback, destroy | | <code>@mycli-cli/secrets-manager</code> | Environment secrets planning and sync | | <code>@mycli-cli/deployment-manager</code> | Static config + <code>validateSetup()</code> |</p>
+<p>Templates live in <code>apps/cli/templates/features/cloud/</code>.</p>
+<p>See <a href="./CLOUD_DEPLOY_GUIDE.md">CLOUD_DEPLOY_GUIDE.md</a> for runtime deploy commands.</p>
+<h2>Plugin marketplace managers (Phase 7)</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/registry-manager</code> | Plugin catalog search, get, publish, path resolution | | <code>@mycli-cli/marketplace-manager</code> | Install, update, uninstall, publish orchestration | | <code>@mycli-cli/plugin-system</code> | Plugin discovery, load, lifecycle, command registration |</p>
+<p>See <a href="./MARKETPLACE_GUIDE.md">MARKETPLACE_GUIDE.md</a> and <a href="./PLUGIN_GUIDE.md">PLUGIN_GUIDE.md</a>.</p>
+<h2>Frontend &amp; architecture managers (Phase 8)</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/frontend-manager</code> | React, Next.js, Vue, Nuxt, Angular scaffolds via EJS | | <code>@mycli-cli/ui-manager</code> | UI library install + config (Tailwind, Shadcn, MUI, …) | | <code>@mycli-cli/architecture-manager</code> | Monolith, modular-monolith, microservice, monorepo, polyrepo layouts |</p>
+<p>Templates live in <code>apps/cli/templates/features/frontend/</code>, <code>features/ui/</code>, and <code>architecture/</code>.</p>
+<p>CLI: <code>my add ui</code>, <code>my dev</code>, <code>my test</code>, <code>my lint</code>, <code>my build</code>, <code>my create --app-type full-stack</code>.</p>
+<h2>Database &amp; ORM managers (Phase 9)</h2>
+<p>| Package | Responsibility | |---------|----------------| | <code>@mycli-cli/database-manager</code> | All ORMs (Prisma, Drizzle, TypeORM, Mongoose, Sequelize, MikroORM) | | Database plugins | Per-engine docs + env for PostgreSQL, MySQL, MongoDB, Redis, … |</p>
+<p>See <a href="./DATABASE_GUIDE.md">DATABASE_GUIDE.md</a>.</p>
+<p>Managers encapsulate domain generation (auth, rbac, docker, database, deployment, …). They depend on the template engine and filesystem — never hardcode file contents via string concatenation in call sites when a template exists.</p>
+<h2>Plugin model</h2>
+<p>Everything extendable is a plugin:</p>
+<pre><code class="language-ts">interface Plugin {
+  name: string;
+  version: string;
+  install?(ctx): void | Promise&lt;void&gt;;
+  uninstall?(ctx): void | Promise&lt;void&gt;;
+  commands?(): CommandDefinition[];
+  templates?(): string[];
+  generators?(): string[];
+  dependencies?(): Record&lt;string, string&gt;;
+  hooks?(): PluginHooks;
+}</code></pre>
+<h2>Dependency injection</h2>
+<p><code>ApplicationContext</code> owns a <code>Container</code>. Engines register services as singletons. Commands resolve collaborators through the CLI engine rather than importing globals.</p>
+<h2>Events</h2>
+<p>Typed <code>EventBus</code> emits <code>command:<em></code>, <code>plugin:</em></code>, <code>generator:<em></code>, and <code>app:</em></code> lifecycle events for telemetry and hooks.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./getting-started.html">← Getting started</a>
+  <a class="doc-next" href="./plugin-guide.html">Plugin guide →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laravel Artisan for Node.js" />
+  <title>Templates · MyCLI</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="brand"><a href="../index.html">MyCLI</a></p>
+    <h1>Templates</h1>
+    <nav class="site-nav"><a href="../index.html">Home</a>
+<a href="./index.html">Docs</a>
+<a href="./getting-started.html">Getting started</a>
+<a href="./architecture.html">Architecture</a>
+<a href="./plugin-guide.html">Plugin guide</a>
+<a href="./marketplace-guide.html">Marketplace</a>
+<a href="./generator-guide.html">Generators</a>
+<a href="./database-guide.html">Database</a>
+<a href="./features-guide.html">Features</a>
+<a href="./services-guide.html">Services</a>
+<a href="./secrets.html">Secrets</a>
+<a href="./ecommerce.html">Ecommerce</a>
+<a href="./plugins.html">Plugins</a>
+<a href="./infra-guide.html">Infrastructure</a>
+<a href="./cloud-deploy-guide.html">Cloud deploy</a>
+<a href="./git-cicd-guide.html">Git & CI/CD</a>
+<a href="./ide-guide.html">IDE & DevContainer</a>
+<a href="./platform-guide.html">Platform</a>
+<a href="./cli-reference.html">CLI reference</a>
+<a href="./publishing.html">Publishing</a></nav>
+  </header>
+  <main class="content"><article class="markdown"><h1>Templates</h1>
+<h2>Source of truth</h2>
+<p>All EJS templates used by the CLI are in:</p>
+<pre><code>apps/cli/templates/
+├── features/      # my add, create wizard, deploy
+├── generators/    # my make &lt;type&gt;
+└── architecture/  # architecture-manager layouts</code></pre>
+<p>The root <code>templates/</code> directory documents architecture categories only. See <a href="../templates/README.md">templates/README.md</a>.</p>
+<h2>Rendering</h2>
+<p>Managers use <code>@mycli-cli/template-engine</code>:</p>
+<pre><code class="language-ts">const templates = createTemplateEngine({
+  filesystem: fs,
+  templatesRoot: resolveTemplatesRoot(), // → apps/cli/templates
+});
+await templates.renderFile('features/docker/Dockerfile.ejs', { data });</code></pre>
+<p><code>resolveTemplatesRoot()</code> is defined in <code>apps/cli/src/paths.ts</code> and copied to <code>apps/cli/dist/templates</code> on build.</p>
+<h2>Adding a feature template</h2>
+<p>1. Create <code>apps/cli/templates/features/&lt;feature&gt;/<em>.ejs</code> 2. Add generation logic in the matching <code></em>-manager</code> package 3. Expose via <code>my add &lt;feature&gt;</code> in <code>apps/cli/src/commands/add.ts</code> 4. Add manager tests with <code>featureTemplatesRoot()</code> helper pointing at <code>apps/cli/templates</code></p>
+<h2>Generators</h2>
+<p>See <a href="../GENERATOR_GUIDE.md">GENERATOR_GUIDE.md</a> for <code>my make</code> generator registration in <code>apps/cli/src/commands/make.ts</code>.</p></article><nav class="doc-pager" aria-label="Document navigation">
+  <a class="doc-prev" href="./testing.html">← Testing</a>
+  <a class="doc-next" href="./infra-guide.html">Infrastructure →</a>
+</nav></main>
+  <footer><small>© MyCLI — documentation built from repository guides</small></footer>
+</body>
+</html>
